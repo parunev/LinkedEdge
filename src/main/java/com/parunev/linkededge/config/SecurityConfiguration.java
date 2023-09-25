@@ -60,12 +60,24 @@ public class SecurityConfiguration {
                         .addLogoutHandler(jwtLogout)
                         .logoutSuccessHandler(((request, response, authentication) -> {
                             response.setContentType("application/json");
+                            final String authHeader = request.getHeader("Authorization");
+
+                            String message;
+                            HttpStatus status;
+                            if (authHeader == null || !authHeader.startsWith("Bearer ")){
+                                message = "There is no authenticated user.";
+                                status = HttpStatus.UNAUTHORIZED;
+                            } else {
+                                message = "User successfully logged out.";
+                                status = HttpStatus.OK;
+                            }
+
                             response.getWriter().write(objectMapper.writeValueAsString(
                                     ApiResponse.builder()
                                             .path(request.getRequestURI())
-                                            .message("User successfully logged out")
+                                            .message(message)
                                             .timestamp(LocalDateTime.now())
-                                            .status(HttpStatus.OK)
+                                            .status(status)
                                             .build()
                             ));
                             SecurityContextHolder.clearContext();

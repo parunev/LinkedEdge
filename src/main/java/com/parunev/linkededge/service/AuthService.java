@@ -1,25 +1,15 @@
 package com.parunev.linkededge.service;
 
-import com.parunev.linkededge.model.ConfirmationToken;
-import com.parunev.linkededge.model.JwtToken;
-import com.parunev.linkededge.model.Profile;
-import com.parunev.linkededge.model.User;
+import com.nimbusds.jose.util.Pair;
+import com.parunev.linkededge.model.*;
 import com.parunev.linkededge.model.enums.Authority;
 import com.parunev.linkededge.model.enums.TokenType;
-import com.parunev.linkededge.model.payload.login.LoginRequest;
-import com.parunev.linkededge.model.payload.login.LoginResponse;
-import com.parunev.linkededge.model.payload.login.VerificationRequest;
-import com.parunev.linkededge.model.payload.login.VerificationResponse;
+import com.parunev.linkededge.model.payload.login.*;
 import com.parunev.linkededge.model.payload.registration.RegistrationRequest;
 import com.parunev.linkededge.model.payload.registration.RegistrationResponse;
 import com.parunev.linkededge.model.payload.registration.ResendTokenRequest;
-import com.parunev.linkededge.repository.ConfirmationTokenRepository;
-import com.parunev.linkededge.repository.JwtTokenRepository;
-import com.parunev.linkededge.repository.ProfileRepository;
-import com.parunev.linkededge.repository.UserRepository;
-import com.parunev.linkededge.security.exceptions.OTPValidationException;
-import com.parunev.linkededge.security.exceptions.RegistrationFailedException;
-import com.parunev.linkededge.security.exceptions.UserNotFoundException;
+import com.parunev.linkededge.repository.*;
+import com.parunev.linkededge.security.exceptions.*;
 import com.parunev.linkededge.security.jwt.JwtService;
 import com.parunev.linkededge.security.mfa.Email2FA;
 import com.parunev.linkededge.security.mfa.Google2FA;
@@ -39,10 +29,12 @@ import org.springframework.validation.annotation.Validated;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.parunev.linkededge.util.RequestUtil.getCurrentRequest;
 import static com.parunev.linkededge.util.email.EmailPatterns.confirmationEmail;
+import static com.parunev.linkededge.util.email.EmailPatterns.forgotPasswordEmail;
 
 @Service
 @Validated
@@ -53,6 +45,7 @@ public class AuthService {
     private final ProfileRepository profileRepository;
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final JwtTokenRepository jwtTokenRepository;
+    private final PasswordTokenRepository passwordTokenRepository;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -62,6 +55,7 @@ public class AuthService {
     private final LELogger leLogger = new LELogger(AuthService.class);
 
     public final static String CONFIRMATION_LINK = "http://localhost:8080/edge-api/v1/auth/register/confirm?token=";
+    public final static String RESET_PASSWORD_LINK = "http://localhost:8080/edge-api/v1/auth/login/reset-password?token=";
 
     public RegistrationResponse register(@Valid RegistrationRequest request){
         leLogger.info("Proceeding the registration request for user: {}", request.getUsername());
@@ -111,14 +105,13 @@ public class AuthService {
     }
 
     public RegistrationResponse resendToken(@Valid ResendTokenRequest request){
-        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
-                () -> {
-                    leLogger.warn("User with the provided email not found: {}", request.getEmail());
-                    throw new UserNotFoundException(
-                            buildError("User with the provided email not found. Please ensure you have created an account", HttpStatus.NOT_FOUND)
-                            );
-                }
-        );
+        User user = findUserByEmail(request.getEmail());
+
+        if (user.isEnabled()){
+            throw new UserAlreadyEnabledException(
+                    buildError("Your account is already enabled." +
+                            "You can log in now.", HttpStatus.BAD_REQUEST));
+        }
 
         List<ConfirmationToken> userConfirmationToken =
                 confirmationTokenRepository.findAllByUserEmail(user.getEmail());
@@ -132,6 +125,7 @@ public class AuthService {
                 .build();
         confirmationTokenRepository.save(confirmationToken);
 
+        // Needs to be front-end link
         emailSender.send(user.getEmail(), confirmationEmail(user.getFullName(), CONFIRMATION_LINK + confirmationToken.getTokenValue()),
                 "Welcome to LinkedEdge! Verify your email to get started!");
 
@@ -179,7 +173,7 @@ public class AuthService {
     }
 
     public LoginResponse login(@Valid LoginRequest request){
-        User user = findUser(request.getUsername());
+        User user = findUserByUsername(request.getUsername());
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
@@ -199,33 +193,23 @@ public class AuthService {
                     .build();
         }
 
-        String accessToken = jwtService.generateToken(user);
-        String refreshToken = jwtService.generateRefreshToken(user);
+        Pair<String, String> tokens = generateJwtTokens(user);
         revokeAndSaveTokens(user);
-
-        JwtToken token = JwtToken.builder()
-                .user(user)
-                .tokenValue(accessToken)
-                .tokenType(TokenType.BEARER)
-                .expired(false)
-                .revoked(false)
-                .build();
-
-        jwtTokenRepository.save(token);
-        leLogger.info("Tokens revoked and new token saved for user: {}", user.getUsername());
 
         return LoginResponse.builder()
                 .path(getCurrentRequest())
                 .message("Login successful. Welcome, " + user.getUsername() + "!")
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
+                .accessToken(tokens.getLeft())
+                .refreshToken(tokens.getRight())
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.OK)
                 .build();
     }
 
     public VerificationResponse sendVerificationCode(VerificationRequest request) {
-        User user = findUser(request.getUsername());
+        User user = findUserByUsername(request.getUsername());
+
+        isMfaEnabled(user.isMfaEnabled());
 
         email2FA.sendOtp(user, "Generic Message: LinkedEdge 2FA");
         return VerificationResponse.builder()
@@ -237,7 +221,9 @@ public class AuthService {
     }
 
     public LoginResponse verifyLogin(VerificationRequest request) {
-        User user = findUser(request.getUsername());
+        User user = findUserByUsername(request.getUsername());
+
+        isMfaEnabled(user.isMfaEnabled());
 
         boolean isGoogle2FAValid = google2FA.isOtpValid(user.getMfaSecret(), request.getCode());
         if (isGoogle2FAValid){
@@ -251,9 +237,69 @@ public class AuthService {
             );
         }
 
+        Pair<String, String> tokens = generateJwtTokens(user);
+        revokeAndSaveTokens(user);
+
+        return LoginResponse.builder()
+                .path(getCurrentRequest())
+                .message("Login successful. Welcome, " + user.getUsername() + "!")
+                .accessToken(tokens.getLeft())
+                .refreshToken(tokens.getRight())
+                .timestamp(LocalDateTime.now())
+                .mfaEnabled(true)
+                .status(HttpStatus.OK)
+                .build();
+    }
+
+    public ForgotPasswordResponse sendForgotPasswordEmail(@Valid ForgotPasswordRequest request){
+        User user = findUserByEmail(request.getEmail());
+
+        PasswordToken passwordToken = PasswordToken.builder()
+                .tokenValue(UUID.randomUUID().toString())
+                .tokenType(TokenType.PASSWORD)
+                .expires(LocalDateTime.now().plusHours(24))
+                .user(user)
+                .build();
+        passwordTokenRepository.save(passwordToken);
+
+        // Needs to be front-end link
+        emailSender.send(user.getEmail(), forgotPasswordEmail(user.getFullName()
+                        , RESET_PASSWORD_LINK + passwordToken.getTokenValue()),
+                "LinkedEdge: Reset your password");
+
+        leLogger.info("Forgot password email has been sent");
+        return ForgotPasswordResponse.builder()
+                .path(getCurrentRequest())
+                .message("An email has been sent to your registered email address." +
+                        " The password reset link will expire in 24 hours for security reasons.")
+                .email(request.getEmail())
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.OK)
+                .build();
+    }
+
+    public ForgotPasswordResponse resetPassword(String token, @Valid ResetPasswordRequest request){
+
+        PasswordToken passwordToken = verifyPasswordToken(token);
+
+        User user = passwordToken.getUser();
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        userRepository.save(user);
+        leLogger.info("Password changed successfully");
+        return ForgotPasswordResponse.builder()
+                .path(getCurrentRequest())
+                .message("Your password has been successfully reset." +
+                        " You can now use your new password to log in.")
+                .email(user.getEmail())
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.OK)
+                .build();
+    }
+
+    public Pair<String, String> generateJwtTokens(User user) {
         String accessToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
-        revokeAndSaveTokens(user);
 
         JwtToken token = JwtToken.builder()
                 .user(user)
@@ -264,16 +310,33 @@ public class AuthService {
                 .build();
 
         jwtTokenRepository.save(token);
+        leLogger.info("Tokens saved for user: {}", user.getUsername());
 
-        return LoginResponse.builder()
-                .path(getCurrentRequest())
-                .message("Login successful. Welcome, " + user.getUsername() + "!")
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .timestamp(LocalDateTime.now())
-                .mfaEnabled(true)
-                .status(HttpStatus.OK)
-                .build();
+        return Pair.of(accessToken, refreshToken);
+    }
+
+    private void isMfaEnabled(boolean enabled) {
+        if (!enabled){
+            throw new UserMfaNotEnabledException(
+                    buildError("Multi-factor authentication is not enabled for your account.", HttpStatus.BAD_REQUEST));
+        }
+    }
+
+    private PasswordToken verifyPasswordToken(String token){
+        return Optional.ofNullable(passwordTokenRepository.findByTokenValue(token))
+                .flatMap(byToken -> byToken
+                        .filter(
+                                reset ->
+                                        reset.getConfirmed() == null
+                                                && reset
+                                                .getExpires()
+                                                .isAfter(LocalDateTime.now())))
+                .orElseThrow(
+                        () -> {
+                            leLogger.warn("Token not found or is already used!");
+                            throw new InvalidPasswordResetException(
+                                    buildError("Token not found or is already used!", HttpStatus.BAD_REQUEST));
+                        });
     }
 
 
@@ -338,7 +401,18 @@ public class AuthService {
                 .build();
     }
 
-    private User findUser(String username){
+    private User findUserByEmail(String email){
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> {
+                    leLogger.warn("User with the provided email not found: {}", email);
+                    throw new UserNotFoundException(
+                            buildError("User with the provided email not found. Please ensure you have created an account", HttpStatus.NOT_FOUND)
+                    );
+                }
+        );
+    }
+
+    private User findUserByUsername(String username){
         return userRepository.findByUsername(username).orElseThrow(
                 () -> {
                     leLogger.warn("User with the provided username not found: {}",username);

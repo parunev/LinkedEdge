@@ -1,9 +1,6 @@
 package com.parunev.linkededge.controller;
 
-import com.parunev.linkededge.model.payload.login.LoginRequest;
-import com.parunev.linkededge.model.payload.login.LoginResponse;
-import com.parunev.linkededge.model.payload.login.VerificationRequest;
-import com.parunev.linkededge.model.payload.login.VerificationResponse;
+import com.parunev.linkededge.model.payload.login.*;
 import com.parunev.linkededge.model.payload.registration.RegistrationRequest;
 import com.parunev.linkededge.model.payload.registration.RegistrationResponse;
 import com.parunev.linkededge.model.payload.registration.ResendTokenRequest;
@@ -59,6 +56,22 @@ public class AuthController {
     @PostMapping("/login/send-code")
     public ResponseEntity<VerificationResponse> sendCode(
             @RequestBody VerificationRequest verificationRequest){
+        leLogger.info("2FA Code request received");
         return new ResponseEntity<>(authService.sendVerificationCode(verificationRequest), HttpStatus.OK);
+    }
+
+    @PostMapping("/login/forgot-password")
+    public ResponseEntity<ForgotPasswordResponse> forgotPassword(
+            @RequestBody ForgotPasswordRequest request) {
+        leLogger.info("Forgot password request received");
+        return new ResponseEntity<>(authService.sendForgotPasswordEmail(request), HttpStatus.OK);
+    }
+
+    @PostMapping("/login/reset-password")
+    public ResponseEntity<ForgotPasswordResponse> resetPassword(
+            @RequestParam("token") String token,
+            @RequestBody ResetPasswordRequest request) {
+        leLogger.info("Reset password request received");
+        return new ResponseEntity<>(authService.resetPassword(token, request), HttpStatus.OK);
     }
 }
