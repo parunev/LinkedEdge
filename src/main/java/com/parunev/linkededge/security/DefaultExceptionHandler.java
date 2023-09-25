@@ -1,12 +1,8 @@
 package com.parunev.linkededge.security;
 
-import com.parunev.linkededge.security.exceptions.EmailSenderException;
-import com.parunev.linkededge.security.exceptions.RegistrationFailedException;
-import com.parunev.linkededge.security.exceptions.UserNotFoundException;
+import com.parunev.linkededge.security.exceptions.*;
 import com.parunev.linkededge.security.payload.ApiError;
 import com.parunev.linkededge.security.payload.ConstraintError;
-import com.parunev.linkededge.util.RequestUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,13 +30,33 @@ public class DefaultExceptionHandler {
         return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
     }
 
+    @ExceptionHandler(UserAlreadyEnabledException.class)
+    public ResponseEntity<ApiError> handleUserAlreadyEnabledException(UserAlreadyEnabledException ex){
+        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
+    }
+
+    @ExceptionHandler(UserMfaNotEnabledException.class)
+    public ResponseEntity<ApiError> handleUserMfaNotEnabledException(UserMfaNotEnabledException ex){
+        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
+    }
+
     @ExceptionHandler(RegistrationFailedException.class)
     public ResponseEntity<ApiError> handleRegistrationFailedException(RegistrationFailedException ex) {
         return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());
     }
 
+    @ExceptionHandler(OTPValidationException.class)
+    public ResponseEntity<ApiError> handleOTPValidationException(OTPValidationException ex){
+        return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());
+    }
+
+    @ExceptionHandler(InvalidPasswordResetException.class)
+    public ResponseEntity<ApiError> handleInvalidPasswordResetException(InvalidPasswordResetException ex){
+        return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ConstraintError> handleValidationException(ConstraintViolationException ex, HttpServletRequest request) {
+    public ResponseEntity<ConstraintError> handleValidationException(ConstraintViolationException ex) {
         Map<String, String> errors = new HashMap<>();
 
         ex.getConstraintViolations().forEach(error -> {
