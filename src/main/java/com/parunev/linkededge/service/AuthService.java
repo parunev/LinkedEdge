@@ -144,7 +144,7 @@ public class AuthService {
                 .orElseThrow(() -> {
                     leLogger.warn("Token not found");
                     throw new RegistrationFailedException(
-                            buildError("Token not found. Please ensure you have the correct token or request a new one.", HttpStatus.UNPROCESSABLE_ENTITY)
+                            buildError("Token not found. Please ensure you have the correct token or request a new one.", HttpStatus.NOT_FOUND)
                             );
                 });
 
@@ -335,7 +335,7 @@ public class AuthService {
                         () -> {
                             leLogger.warn("Token not found or is already used!");
                             throw new InvalidPasswordResetException(
-                                    buildError("Token not found or is already used!", HttpStatus.BAD_REQUEST));
+                                    buildError("Token not found or is already used!", HttpStatus.NOT_FOUND));
                         });
     }
 

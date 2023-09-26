@@ -68,15 +68,6 @@ public class Email2FA {
                 }
         );
 
-        if (user == null) {
-            throw new OTPValidationException(ApiError.builder()
-                    .path(getCurrentRequest())
-                    .error("Failed to fetch userfrom database.")
-                    .timestamp(LocalDateTime.now())
-                    .status(HttpStatus.NOT_FOUND)
-                    .build());
-        }
-
         Integer storedOneTimePassword;
 
         try{
