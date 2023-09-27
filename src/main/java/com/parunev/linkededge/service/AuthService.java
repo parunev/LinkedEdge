@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -67,7 +66,7 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
-                .authorities(Collections.singleton(Authority.AUTHORITY_USER))
+                .authority(Authority.AUTHORITY_USER)
                 .mfaEnabled(false)
                 .mfaSecret(google2FA.generateNewSecret())
                 .build();

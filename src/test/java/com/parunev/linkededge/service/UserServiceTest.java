@@ -12,7 +12,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,7 +37,7 @@ class UserServiceTest {
         String username = "username";
         User sampleUser = User.builder()
                 .username(username)
-                .authorities(Collections.singleton(Authority.AUTHORITY_USER))
+                .authority(Authority.AUTHORITY_USER)
                 .build();
 
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(sampleUser));

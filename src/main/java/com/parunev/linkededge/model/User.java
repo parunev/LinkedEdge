@@ -4,9 +4,12 @@ import com.parunev.linkededge.model.commons.BaseEntity;
 import com.parunev.linkededge.model.enums.Authority;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Set;
+import java.util.Collection;
+import java.util.Collections;
 
 @Data
 @Builder
@@ -32,11 +35,9 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "LAST_NAME", length = 100, nullable = false)
     private String lastName;
 
-    @ElementCollection(targetClass = Authority.class)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "EDGE_USER_AUTHORITIES", joinColumns = @JoinColumn(name = "EDGE_USER_ID"))
     @Column(name = "AUTHORITY", nullable = false)
-    private Set<Authority> authorities;
+    private Authority authority;
 
     @Column(name = "ENABLED", columnDefinition = "boolean default false")
     private boolean isEnabled;
@@ -46,6 +47,11 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(name = "MFA_SECRET", nullable = false)
     private String mfaSecret;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(new SimpleGrantedAuthority(authority.getAuthorityName()));
+    }
 
     @Override
     public boolean isAccountNonExpired() {return true;}
