@@ -1,12 +1,9 @@
 package com.parunev.linkededge.model;
 
 import com.parunev.linkededge.model.commons.BaseEntity;
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 
 @Data
 @Builder
@@ -27,8 +24,12 @@ public class Education extends BaseEntity {
     private String fieldOfStudy;
 
     @Column(name = "DATE_STARTED")
-    private LocalDate dateStarted;
+    private String dateStarted;
 
     @Column(name = "DATE_ENDED")
-    private LocalDate dateEnded;
+    private String dateEnded;
+
+    @ManyToOne
+    @JoinColumn(name = "EDGE_PROFILE_ID")
+    private Profile profile;
 }

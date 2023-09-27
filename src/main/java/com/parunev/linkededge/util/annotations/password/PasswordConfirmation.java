@@ -1,4 +1,4 @@
-package com.parunev.linkededge.util.annotations;
+package com.parunev.linkededge.util.annotations.password;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

@@ -1,9 +1,7 @@
 package com.parunev.linkededge.model;
 
 import com.parunev.linkededge.model.commons.BaseEntity;
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Data
@@ -20,4 +18,8 @@ public class Organisation extends BaseEntity {
 
     @Column(name = "SALES_NAV_LINK")
     private String salesNavLink;
+
+    @ManyToOne
+    @JoinColumn(name = "EDGE_PROFILE_ID")
+    private Profile profile;
 }

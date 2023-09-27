@@ -193,8 +193,8 @@ public class AuthService {
                     .build();
         }
 
-        Pair<String, String> tokens = generateJwtTokens(user);
         revokeAndSaveTokens(user);
+        Pair<String, String> tokens = generateJwtTokens(user);
 
         return LoginResponse.builder()
                 .path(getCurrentRequest())
@@ -237,8 +237,8 @@ public class AuthService {
             );
         }
 
-        Pair<String, String> tokens = generateJwtTokens(user);
         revokeAndSaveTokens(user);
+        Pair<String, String> tokens = generateJwtTokens(user);
 
         return LoginResponse.builder()
                 .path(getCurrentRequest())

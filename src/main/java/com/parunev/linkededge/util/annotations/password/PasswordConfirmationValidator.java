@@ -1,4 +1,4 @@
-package com.parunev.linkededge.util.annotations;
+package com.parunev.linkededge.util.annotations.password;
 
 import com.parunev.linkededge.model.payload.login.ResetPasswordRequest;
 import com.parunev.linkededge.model.payload.registration.RegistrationRequest;

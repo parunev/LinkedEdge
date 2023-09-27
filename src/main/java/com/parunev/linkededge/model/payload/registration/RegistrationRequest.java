@@ -1,6 +1,6 @@
 package com.parunev.linkededge.model.payload.registration;
 
-import com.parunev.linkededge.util.annotations.PasswordConfirmation;
+import com.parunev.linkededge.util.annotations.password.PasswordConfirmation;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
