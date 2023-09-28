@@ -10,7 +10,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @Entity(name = "EDGE_PROFILE")
 @AttributeOverride(name = "id", column = @Column(name = "PROFILE_ID"))
 public class Profile extends BaseEntity {

@@ -1,5 +1,6 @@
 package com.parunev.linkededge.model.payload.registration;
 
+import com.parunev.linkededge.util.annotations.linkedin.NameInLinkedInLink;
 import com.parunev.linkededge.util.annotations.password.PasswordConfirmation;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -7,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
+@NameInLinkedInLink
 @PasswordConfirmation
 public class RegistrationRequest {
 
@@ -38,4 +40,8 @@ public class RegistrationRequest {
     @Size(max = 50, message = "Last name must be less than 50 characters long.")
     @Pattern(regexp = "^[a-zA-Zà-üÀ-Ü]+$", message = "Last name should contain only letters")
     private String lastName;
+
+    @NotBlank(message = "Please enter your LinkedIn profile")
+    @Pattern(regexp = "https://www\\.linkedin\\.com/in/.*", message = "Not a valid LinkedIn link")
+    private String profileLink;
 }

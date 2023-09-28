@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @Entity(name = "EDGE_EDUCATION")
 @AttributeOverride(name = "id", column = @Column(name = "EDUCATION_ID"))
 public class Education extends BaseEntity {

@@ -3,12 +3,16 @@ package com.parunev.linkededge.security;
 import com.parunev.linkededge.security.exceptions.*;
 import com.parunev.linkededge.security.payload.ApiError;
 import com.parunev.linkededge.security.payload.ConstraintError;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -20,13 +24,49 @@ import static com.parunev.linkededge.util.RequestUtil.getCurrentRequest;
 @RequiredArgsConstructor
 public class DefaultExceptionHandler {
 
+    @ExceptionHandler({Exception.class, RuntimeException.class})
+    public ResponseEntity<ApiError> handleException
+            (Exception e, HttpServletRequest request) {
+        return new ResponseEntity<>(ApiError.builder()
+                .path(request.getRequestURI())
+                .error(e.getMessage())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .timestamp(LocalDateTime.now())
+                .build(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(JSONException.class)
+    public ResponseEntity<String> handleJSONException(JSONException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({HttpStatusCodeException.class, HttpClientErrorException.class})
+    public ResponseEntity<String> handleHttpStatusCodeException(HttpStatusCodeException ex){
+        return new ResponseEntity<>(ex.getMessage(), ex.getStatusCode());
+    }
+
+    @ExceptionHandler(ReadingJsonNodeException.class)
+    public ResponseEntity<ApiError> handleReadingJsonNodeException(ReadingJsonNodeException ex){
+        return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());
+    }
+
+    @ExceptionHandler(ProfileNotFoundException.class)
+    public ResponseEntity<ApiError> handleProfileNotFoundException(ProfileNotFoundException ex){
+        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
+    }
+
+    @ExceptionHandler(InvalidExtractException.class)
+    public ResponseEntity<ApiError> handleInvalidExtractException(InvalidExtractException ex){
+        return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());
+    }
+
     @ExceptionHandler(EmailSenderException.class)
     public ResponseEntity<ApiError> handleEmailSenderException(EmailSenderException ex) {
         return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ApiError> handleEmailSenderException(UserNotFoundException ex) {
+    public ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException ex) {
         return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
     }
 

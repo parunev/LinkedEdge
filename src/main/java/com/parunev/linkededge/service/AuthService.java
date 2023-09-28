@@ -14,17 +14,20 @@ import com.parunev.linkededge.security.jwt.JwtService;
 import com.parunev.linkededge.security.mfa.Email2FA;
 import com.parunev.linkededge.security.mfa.Google2FA;
 import com.parunev.linkededge.security.payload.ApiError;
+import com.parunev.linkededge.service.profile.ProfileService;
 import com.parunev.linkededge.util.LELogger;
 import com.parunev.linkededge.util.email.EmailSender;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,13 +44,13 @@ import static com.parunev.linkededge.util.email.EmailPatterns.forgotPasswordEmai
 public class AuthService {
 
     private final UserRepository userRepository;
-    private final ProfileRepository profileRepository;
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final JwtTokenRepository jwtTokenRepository;
     private final PasswordTokenRepository passwordTokenRepository;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final ProfileService profileService;
     private final Google2FA google2FA;
     private final Email2FA email2FA;
     private final EmailSender emailSender;
@@ -56,7 +59,7 @@ public class AuthService {
     public final static String CONFIRMATION_LINK = "http://localhost:8080/edge-api/v1/auth/register/confirm?token=";
     public final static String RESET_PASSWORD_LINK = "http://localhost:8080/edge-api/v1/auth/login/reset-password?token=";
 
-    public RegistrationResponse register(@Valid RegistrationRequest request){
+    public RegistrationResponse register(@Valid RegistrationRequest request) {
         leLogger.info("Proceeding the registration request for user: {}", request.getUsername());
         userExists(request.getEmail(), request.getUsername());
 
@@ -66,19 +69,13 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
+                .linkedInProfile(request.getProfileLink())
                 .authority(Authority.AUTHORITY_USER)
                 .mfaEnabled(false)
                 .mfaSecret(google2FA.generateNewSecret())
                 .build();
         userRepository.save(user);
         leLogger.info("User saved to database: {}", user.getUsername());
-
-        Profile profile = Profile.builder()
-                .fullName(user.getFullName())
-                .user(user)
-                .build();
-        profileRepository.save(profile);
-        leLogger.info("User profile saved to database: {}", user.getUsername());
 
         ConfirmationToken confirmationToken = ConfirmationToken.builder()
                 .tokenValue(UUID.randomUUID().toString())
@@ -161,6 +158,21 @@ public class AuthService {
         userRepository.enableAppUser(confirmationToken.getUser().getEmail());
 
         leLogger.info("User enabled: {}", confirmationToken.getUser().getEmail());
+
+
+        try {
+            profileService.createProfile(confirmationToken.getUser());
+            leLogger.info("User profile saved to database: {}", confirmationToken.getUser().getUsername());
+        } catch (JSONException | HttpStatusCodeException e){
+            leLogger.error("Something went wrong with the profile creation {} [}", e, e.getMessage());
+            throw new InvalidExtractException(ApiError.builder()
+                    .path(getCurrentRequest())
+                    .error(e.getMessage())
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .timestamp(LocalDateTime.now())
+                    .build());
+        }
+
 
         return RegistrationResponse.builder()
                 .path(getCurrentRequest())

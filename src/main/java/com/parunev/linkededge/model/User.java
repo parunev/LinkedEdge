@@ -35,6 +35,9 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "LAST_NAME", length = 100, nullable = false)
     private String lastName;
 
+    @Column(name = "LINKED_IN_PROFILE", nullable = false)
+    private String linkedInProfile;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "AUTHORITY", nullable = false)
     private Authority authority;

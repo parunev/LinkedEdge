@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @Entity(name = "EDGE_SKILL")
 @AttributeOverride(name = "id", column = @Column(name = "SKILL_ID"))
 public class Skill extends BaseEntity {

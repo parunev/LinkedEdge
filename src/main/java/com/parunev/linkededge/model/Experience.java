@@ -13,6 +13,9 @@ import lombok.*;
 @AttributeOverride(name = "id", column = @Column(name = "EXPERIENCE_ID"))
 public class Experience extends BaseEntity {
 
+    @Column(name = "DESCRIPTION", length = 2000)
+    private String description;
+
     @Column(name = "JOB_TITLE")
     private String title;
 
