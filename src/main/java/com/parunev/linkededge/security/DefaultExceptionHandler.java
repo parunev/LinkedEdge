@@ -1,5 +1,6 @@
 package com.parunev.linkededge.security;
 
+import com.parunev.linkededge.openai.exception.OpenAiException;
 import com.parunev.linkededge.security.exceptions.*;
 import com.parunev.linkededge.security.payload.ApiError;
 import com.parunev.linkededge.security.payload.ConstraintError;
@@ -68,6 +69,26 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException ex) {
         return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
+    }
+
+    @ExceptionHandler(InsufficientCapacityException.class)
+    public ResponseEntity<ApiError> handleInsufficientCapacityException(InsufficientCapacityException ex) {
+        return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());
+    }
+
+    @ExceptionHandler(InvalidWritingException.class)
+    public ResponseEntity<ApiError> handleInsufficientCapacityException(InvalidWritingException ex) {
+        return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());
+    }
+
+    @ExceptionHandler(OpenAiException.class)
+    public ResponseEntity<ApiError> handleInsufficientCapacityException(OpenAiException ex) {
+        return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());
+    }
+
+    @ExceptionHandler(UserProfileException.class)
+    public ResponseEntity<ApiError> handleUserProfileException(UserProfileException ex) {
+        return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());
     }
 
     @ExceptionHandler(UserAlreadyEnabledException.class)

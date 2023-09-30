@@ -16,7 +16,16 @@ import java.util.List;
 public class Profile extends BaseEntity {
 
     @Column(name = "CREDITS")
-    private Integer credits = 3;
+    private Integer credits;
+
+    @Column(name = "EDUCATION_EXTRA_CAPACITY")
+    private Integer educationExtraCapacity;
+
+    @Column(name = "EXPERIENCE_EXTRA_CAPACITY")
+    private Integer experienceExtraCapacity;
+
+    @Column(name = "SKILL_EXTRA_CAPACITY")
+    private Integer skillExtraCapacity;
 
     @Column(name = "DESCRIPTION")
     private String description;
@@ -47,6 +56,9 @@ public class Profile extends BaseEntity {
 
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
     private List<Skill> skill;
+
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
+    private List<Question> questions;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
