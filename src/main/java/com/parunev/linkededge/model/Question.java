@@ -14,6 +14,9 @@ import lombok.*;
 @AttributeOverride(name = "id", column = @Column(name = "EDGE_QUESTION_ID"))
 public class Question extends BaseEntity {
 
+    @Column(name = "SKILL_VALUE", nullable = false)
+    private String skillValue;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "QUESTION_DIFFICULTY", nullable = false)
     private QuestionDifficulty difficulty;
@@ -21,7 +24,7 @@ public class Question extends BaseEntity {
     @Column(name = "QUESTION", nullable = false)
     private String questionValue;
 
-    @Column(name = "EXAMPLE_ANSWER")
+    @Column(name = "EXAMPLE_ANSWER", length = 10000)
     private String exampleAnswer;
 
     @ManyToOne

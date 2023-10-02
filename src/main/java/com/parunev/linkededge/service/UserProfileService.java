@@ -16,6 +16,7 @@ import com.parunev.linkededge.repository.*;
 import com.parunev.linkededge.security.exceptions.*;
 import com.parunev.linkededge.security.payload.ApiError;
 import com.parunev.linkededge.util.LELogger;
+import com.parunev.linkededge.util.UserProfileUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -26,11 +27,9 @@ import org.springframework.validation.annotation.Validated;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static com.parunev.linkededge.model.enums.ValidValue.*;
 import static com.parunev.linkededge.openai.OpenAiPrompts.*;
-import static com.parunev.linkededge.security.CurrentUser.getCurrentUserDetails;
 import static com.parunev.linkededge.util.RequestUtil.getCurrentRequest;
 
 @Service
@@ -45,10 +44,11 @@ public class UserProfileService {
     private final OrganisationRepository organisationRepository;
     private final ModelMapper modelMapper;
     private final OpenAi openAi;
+    private final UserProfileUtils upUtils;
     private final LELogger leLogger = new LELogger(UserProfileService.class);
 
     public ProfileResponse updateUserMfa(@Valid ProfileMfaRequest request){
-        User user = findUserByContextHolder();
+        User user = upUtils.findUserByContextHolder();
 
         if (request.isUpdateMfa()) {
             leLogger.info("2FA Authentication enabled for user: {}", user.getUsername());
@@ -70,7 +70,7 @@ public class UserProfileService {
     }
 
     public ProfileResponse addEducation(@Valid ProfileEducationRequest request){
-       Pair<User,Profile> pair = getUserAndProfile();
+       Pair<User,Profile> pair = upUtils.getUserAndProfile();
         leLogger.info("Education creation started for user: {}", pair.getLeft().getUsername());
 
         checkIfValid(VALID_EDUCATION, request.getInstitutionName() + ", " +
@@ -103,7 +103,7 @@ public class UserProfileService {
     }
 
     public ProfileResponse returnAllUserEducations(){
-        Pair<User,Profile> pair = getUserAndProfile();
+        Pair<User,Profile> pair = upUtils.getUserAndProfile();
 
         List<Education> educationsList = pair
                 .getRight()
@@ -123,7 +123,7 @@ public class UserProfileService {
     }
 
     public ProfileResponse addExperience(@Valid ProfileExperienceRequest request){
-        Pair<User,Profile> pair = getUserAndProfile();
+        Pair<User,Profile> pair = upUtils.getUserAndProfile();
         leLogger.info("Experience creation started for user: {}", pair.getLeft().getUsername());
 
         checkIfValid(VALID_EXPERIENCE, "Job Title: " + request.getTitle() + ", " + request.getDescription());
@@ -160,7 +160,7 @@ public class UserProfileService {
     }
 
     public ProfileResponse returnAllUserExperiences(){
-        Pair<User,Profile> pair = getUserAndProfile();
+        Pair<User,Profile> pair = upUtils.getUserAndProfile();
 
         List<Experience> experiencesList = pair
                 .getRight()
@@ -180,7 +180,7 @@ public class UserProfileService {
     }
 
     public ProfileResponse addSkill(@Valid ProfileSkillRequest request){
-        Pair<User,Profile> pair = getUserAndProfile();
+        Pair<User,Profile> pair = upUtils.getUserAndProfile();
         leLogger.info("ProfileSkillRequest received for user: {}", pair.getLeft().getUsername());
 
         leLogger.info("Checking if the skill '{}' is valid.", request.getName());
@@ -206,7 +206,7 @@ public class UserProfileService {
     }
 
     public ProfileResponse returnAllUserSkills(){
-        Pair<User,Profile> pair = getUserAndProfile();
+        Pair<User,Profile> pair = upUtils.getUserAndProfile();
 
         List<Skill> skillList = pair
                 .getRight()
@@ -253,13 +253,6 @@ public class UserProfileService {
         userRepository.save(user);
     }
 
-    private Pair<User, Profile> getUserAndProfile(){
-        User user = findUserByContextHolder();
-        Profile profile = findProfileByUserId(user.getId());
-
-        return Pair.of(user, profile);
-    }
-
     private ProfileResponse buildResponse(String message){
         return ProfileResponse.builder()
                 .path(getCurrentRequest())
@@ -269,26 +262,10 @@ public class UserProfileService {
                 .build();
     }
 
-    private User findUserByContextHolder() {
-        return userRepository.findByUsername(getCurrentUserDetails().getUsername())
-                .orElseThrow(() -> {
-                    leLogger.warn("User not found.");
-                    throw new UserNotFoundException(buildError("User not present in the database.",HttpStatus.NOT_FOUND));
-                });
-    }
-
-    private Profile findProfileByUserId(UUID id) {
-        return profileRepository.findByUserId(id)
-                .orElseThrow(() -> {
-                    leLogger.warn("Profile not found");
-                    throw new ProfileNotFoundException(buildError("Profile not present in the database",HttpStatus.NOT_FOUND));
-                });
-    }
-
     private void checkForCreditsCapacity(Integer capacity) {
         if (capacity == 0){
             throw new InsufficientCapacityException(buildError(
-                    "Sorry, not enough extra capacity for experiences. Consider upgrading your profile!",
+                    "Sorry, not enough extra capacity for experiences. Consider buying more credits for your profile!",
                     HttpStatus.BAD_REQUEST
             ));
         }

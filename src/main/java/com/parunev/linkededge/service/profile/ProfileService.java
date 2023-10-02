@@ -89,6 +89,7 @@ public class ProfileService {
         if (skillsArray.length() == 0){
             return Collections.emptyList();
         }
+
         for (int i = 0; i < skillsArray.length(); i++) {
             JSONObject obj = skillsArray.getJSONObject(i);
             Skill skill = Skill.builder()

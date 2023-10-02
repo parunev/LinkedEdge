@@ -2,6 +2,7 @@ package com.parunev.linkededge.model.payload.profile;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.parunev.linkededge.model.commons.BasePayload;
+import com.parunev.linkededge.model.payload.interview.QuestionResponse;
 import com.parunev.linkededge.model.payload.profile.education.EducationResponse;
 import com.parunev.linkededge.model.payload.profile.experience.ExperienceResponse;
 import com.parunev.linkededge.model.payload.profile.skill.SkillResponse;

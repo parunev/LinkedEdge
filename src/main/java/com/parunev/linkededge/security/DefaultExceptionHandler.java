@@ -71,6 +71,26 @@ public class DefaultExceptionHandler {
         return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
     }
 
+    @ExceptionHandler(EducationNotFoundException.class)
+    public ResponseEntity<ApiError> handleEducationNotFoundException(EducationNotFoundException ex) {
+        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
+    }
+
+    @ExceptionHandler(ExperienceNotFoundException.class)
+    public ResponseEntity<ApiError> handleExperienceNotFoundException(ExperienceNotFoundException ex) {
+        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
+    }
+
+    @ExceptionHandler(OrganisationNotFoundException.class)
+    public ResponseEntity<ApiError> handleOrganisationNotFoundException(OrganisationNotFoundException ex) {
+        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
+    }
+
+    @ExceptionHandler(SkillNotFoundException.class)
+    public ResponseEntity<ApiError> handleSkillNotFoundException(SkillNotFoundException ex) {
+        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
+    }
+
     @ExceptionHandler(InsufficientCapacityException.class)
     public ResponseEntity<ApiError> handleInsufficientCapacityException(InsufficientCapacityException ex) {
         return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());

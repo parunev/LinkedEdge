@@ -52,7 +52,6 @@ public class SecurityConfiguration {
                         })))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/edge-api/v1/auth/**").permitAll()
-                        .requestMatchers("/edge-api/v1/interview/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
