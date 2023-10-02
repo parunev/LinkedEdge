@@ -132,7 +132,6 @@ public class InterviewService {
                 }
             }
 
-            leLogger.info("Creating and saving the questions to the database");
             Question question = Question.builder()
                     .skillValue(questionObj.getString("skill"))
                     .difficulty(QuestionDifficulty.valueOf(questionObj.getString("difficulty").toUpperCase()))
