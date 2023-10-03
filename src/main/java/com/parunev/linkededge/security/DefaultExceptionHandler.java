@@ -77,6 +77,11 @@ public class DefaultExceptionHandler {
         return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
     }
 
+    @ExceptionHandler(QuestionNotFoundException.class)
+    public ResponseEntity<ApiError> handleQuestionNotFoundException(QuestionNotFoundException ex) {
+        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
+    }
+
     @ExceptionHandler(EducationNotFoundException.class)
     public ResponseEntity<ApiError> handleEducationNotFoundException(EducationNotFoundException ex) {
         return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());

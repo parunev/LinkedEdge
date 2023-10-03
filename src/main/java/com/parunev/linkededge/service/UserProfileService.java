@@ -2,7 +2,9 @@ package com.parunev.linkededge.service;
 
 import com.nimbusds.jose.util.Pair;
 import com.parunev.linkededge.model.*;
+import com.parunev.linkededge.model.enums.QuestionDifficulty;
 import com.parunev.linkededge.model.enums.ValidValue;
+import com.parunev.linkededge.model.payload.interview.QuestionResponse;
 import com.parunev.linkededge.model.payload.profile.*;
 import com.parunev.linkededge.model.payload.profile.education.EducationResponse;
 import com.parunev.linkededge.model.payload.profile.education.ProfileEducationRequest;
@@ -20,6 +22,9 @@ import com.parunev.linkededge.util.UserProfileUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +32,8 @@ import org.springframework.validation.annotation.Validated;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static com.parunev.linkededge.model.enums.ValidValue.*;
 import static com.parunev.linkededge.openai.OpenAiPrompts.*;
@@ -42,6 +49,7 @@ public class UserProfileService {
     private final ExperienceRepository experienceRepository;
     private final SkillRepository skillRepository;
     private final OrganisationRepository organisationRepository;
+    private final QuestionRepository questionRepository;
     private final ModelMapper modelMapper;
     private final OpenAi openAi;
     private final UserProfileUtils upUtils;
@@ -222,6 +230,61 @@ public class UserProfileService {
         leLogger.info("Retrieved all skills for user: {}", pair.getLeft().getUsername());
         return ProfileResponse.builder()
                 .skills(skills)
+                .build();
+    }
+
+    public QuestionResponse returnQuestionById(UUID questionId){
+        Pair<User,Profile> pair = upUtils.getUserAndProfile();
+        Optional<Question> question = questionRepository.findById(questionId);
+
+        if (question.isPresent()){
+            Question questionToReturn = question.get();
+            if (questionToReturn.getProfile().equals(pair.getRight())){
+                leLogger.info("Question with ID:{} found and belongs to the specified user and profile.", questionId);
+                return modelMapper.map(question, QuestionResponse.class);
+            } else {
+                leLogger.warn("Question with ID:{} does not belong to the specified user and profile.", questionId);
+                throw new QuestionNotFoundException(buildError("This questions does not belong to your profile", HttpStatus.BAD_REQUEST));
+            }
+        } else {
+            leLogger.warn("Question with ID:{} not found.", questionId);
+            throw new QuestionNotFoundException(buildError("Question not present in the database", HttpStatus.NOT_FOUND));
+        }
+    }
+
+    public Page<QuestionResponse> searchQuestions(String skill, QuestionDifficulty difficulty, UUID experienceId, UUID educationId, Pageable pageable){
+        Pair<User,Profile> pair = upUtils.getUserAndProfile();
+
+        Page<Question> questionPage = questionRepository.findAllQuestions(
+                skill,
+                difficulty,
+                experienceId,
+                educationId,
+                pageable
+        );
+
+        List<Question> filteredQuestions = questionPage
+                .getContent()
+                .stream()
+                .filter(question -> question.getProfile().equals(pair.getRight()))
+                .toList();
+        leLogger.info("{} questions found for the specified user and profile.", filteredQuestions.size());
+
+        if (filteredQuestions.isEmpty()){
+            throw new QuestionNotFoundException(buildError("No questions matching your criteria were found.", HttpStatus.NOT_FOUND));
+        }
+
+        return new PageImpl<>(filteredQuestions
+                .stream().map(this::map).toList(), pageable, filteredQuestions.size());
+    }
+
+    private QuestionResponse map(Question question){
+        return QuestionResponse.builder()
+                .questionId(question.getId())
+                .skillValue(question.getSkillValue())
+                .questionValue(question.getQuestionValue())
+                .exampleAnswer(question.getExampleAnswer())
+                .difficulty(question.getDifficulty())
                 .build();
     }
 

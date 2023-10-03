@@ -1,5 +1,7 @@
 package com.parunev.linkededge.controller;
 
+import com.parunev.linkededge.model.enums.QuestionDifficulty;
+import com.parunev.linkededge.model.payload.interview.QuestionResponse;
 import com.parunev.linkededge.model.payload.profile.*;
 import com.parunev.linkededge.model.payload.profile.education.ProfileEducationRequest;
 import com.parunev.linkededge.model.payload.profile.experience.ProfileExperienceRequest;
@@ -7,10 +9,14 @@ import com.parunev.linkededge.model.payload.profile.skill.ProfileSkillRequest;
 import com.parunev.linkededge.service.UserProfileService;
 import com.parunev.linkededge.util.LELogger;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -68,4 +74,27 @@ public class ProfileController {
         leLogger.info("Request to get all user skills");
         return new ResponseEntity<>(userProfileService.returnAllUserSkills(), HttpStatus.OK);
     }
+
+    @GetMapping("/question/{questionId}")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_USER_EXTRA')")
+    public ResponseEntity<QuestionResponse> getQuestionById(@PathVariable UUID questionId){
+        leLogger.info("Request to get question by id");
+        return new ResponseEntity<>(userProfileService.returnQuestionById(questionId), HttpStatus.OK);
+    }
+
+    @GetMapping("/questions")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_USER_EXTRA')")
+    public ResponseEntity<Page<QuestionResponse>> getAllQuestions(
+            @RequestParam(required = false, defaultValue = "") String skill,
+            @RequestParam(required = false, defaultValue = "") QuestionDifficulty questionDifficulty,
+            @RequestParam(required = false, defaultValue = "") UUID experienceId,
+            @RequestParam(required = false, defaultValue = "") UUID educationId,
+            Pageable pageable
+            ){
+        leLogger.info("Request to retrieve all questions or categorized ones with the following parameters:" +
+                "Skill {}; Difficulty: {}, ExperienceId: {}, EducationId: {}");
+
+        return new ResponseEntity<>(userProfileService.searchQuestions(skill, questionDifficulty, experienceId, educationId, pageable), HttpStatus.OK);
+    }
+
 }
