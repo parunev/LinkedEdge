@@ -79,7 +79,7 @@ public class UserProfileService {
             throw new UserProfileException(buildError("The provided email is already associated with another user profile", HttpStatus.BAD_REQUEST));
         }
 
-        if (passwordEncoder.matches(request.getUserPassword(), user.getPassword())){
+        if (!passwordEncoder.matches(request.getUserPassword(), user.getPassword())){
             leLogger.warn("The provided password does not match the user one");
             throw new UserProfileException(buildError("The provided password does not match your password.", HttpStatus.BAD_REQUEST));
         }
