@@ -4,6 +4,8 @@ import com.parunev.linkededge.model.enums.QuestionDifficulty;
 import com.parunev.linkededge.model.payload.interview.QuestionResponse;
 import com.parunev.linkededge.model.payload.profile.*;
 import com.parunev.linkededge.model.payload.profile.education.ProfileEducationRequest;
+import com.parunev.linkededge.model.payload.profile.email.ProfileEmailRequest;
+import com.parunev.linkededge.model.payload.profile.email.ProfileEmailResponse;
 import com.parunev.linkededge.model.payload.profile.experience.ProfileExperienceRequest;
 import com.parunev.linkededge.model.payload.profile.skill.ProfileSkillRequest;
 import com.parunev.linkededge.service.UserProfileService;
@@ -25,6 +27,20 @@ public class ProfileController {
 
     private final UserProfileService userProfileService;
     private final LELogger leLogger = new LELogger(ProfileController.class);
+
+    @PostMapping("/change-email")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_USER_EXTRA')")
+    public ResponseEntity<ProfileEmailResponse> changeUserEmail(@RequestBody ProfileEmailRequest request){
+        leLogger.info("Request to change user email");
+        return new ResponseEntity<>(userProfileService.changeUserEmail(request), HttpStatus.OK);
+    }
+
+    @GetMapping("/change-email/confirm")
+    public ResponseEntity<ProfileEmailResponse> verifyChangeUserEmail(@RequestParam("token") String token,
+                                                                      @RequestParam("e") String email){
+        leLogger.info("Request to verify the change of the user email");
+        return new ResponseEntity<>(userProfileService.verifyChangeUserEmail(token, email), HttpStatus.OK);
+    }
 
     @PostMapping("/mfa")
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_USER_EXTRA')")

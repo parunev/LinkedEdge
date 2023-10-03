@@ -3,11 +3,15 @@ package com.parunev.linkededge.service;
 import com.nimbusds.jose.util.Pair;
 import com.parunev.linkededge.model.*;
 import com.parunev.linkededge.model.enums.QuestionDifficulty;
+import com.parunev.linkededge.model.enums.TokenType;
 import com.parunev.linkededge.model.enums.ValidValue;
 import com.parunev.linkededge.model.payload.interview.QuestionResponse;
-import com.parunev.linkededge.model.payload.profile.*;
+import com.parunev.linkededge.model.payload.profile.ProfileMfaRequest;
+import com.parunev.linkededge.model.payload.profile.ProfileResponse;
 import com.parunev.linkededge.model.payload.profile.education.EducationResponse;
 import com.parunev.linkededge.model.payload.profile.education.ProfileEducationRequest;
+import com.parunev.linkededge.model.payload.profile.email.ProfileEmailRequest;
+import com.parunev.linkededge.model.payload.profile.email.ProfileEmailResponse;
 import com.parunev.linkededge.model.payload.profile.experience.ExperienceResponse;
 import com.parunev.linkededge.model.payload.profile.experience.ProfileExperienceRequest;
 import com.parunev.linkededge.model.payload.profile.skill.ProfileSkillRequest;
@@ -15,10 +19,15 @@ import com.parunev.linkededge.model.payload.profile.skill.SkillResponse;
 import com.parunev.linkededge.openai.OpenAi;
 import com.parunev.linkededge.openai.model.OpenAiMessage;
 import com.parunev.linkededge.repository.*;
-import com.parunev.linkededge.security.exceptions.*;
+import com.parunev.linkededge.security.exceptions.InsufficientCapacityException;
+import com.parunev.linkededge.security.exceptions.QuestionNotFoundException;
+import com.parunev.linkededge.security.exceptions.RegistrationFailedException;
+import com.parunev.linkededge.security.exceptions.UserProfileException;
 import com.parunev.linkededge.security.payload.ApiError;
 import com.parunev.linkededge.util.LELogger;
 import com.parunev.linkededge.util.UserProfileUtils;
+import com.parunev.linkededge.util.email.EmailSender;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -26,18 +35,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static com.parunev.linkededge.model.enums.ValidValue.*;
 import static com.parunev.linkededge.openai.OpenAiPrompts.*;
 import static com.parunev.linkededge.util.RequestUtil.getCurrentRequest;
+import static com.parunev.linkededge.util.email.EmailPatterns.changeEmailAddress;
 
 @Service
 @Validated
@@ -50,10 +59,96 @@ public class UserProfileService {
     private final SkillRepository skillRepository;
     private final OrganisationRepository organisationRepository;
     private final QuestionRepository questionRepository;
+    private final JwtTokenRepository jwtTokenRepository;
+    private final ConfirmationTokenRepository confirmationTokenRepository;
     private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
     private final OpenAi openAi;
     private final UserProfileUtils upUtils;
+    private final EmailSender emailSender;
     private final LELogger leLogger = new LELogger(UserProfileService.class);
+
+    public ProfileEmailResponse changeUserEmail(@Valid ProfileEmailRequest request){
+        User user = upUtils.findUserByContextHolder();
+
+        if (user.getEmail().equals(request.getNewEmail())){
+            leLogger.warn("The email is the same as the current one used by the user");
+            throw new UserProfileException(buildError("The provided email is the same as your current one!", HttpStatus.BAD_REQUEST));
+        } else if (userRepository.existsByEmail(request.getNewEmail())){
+            leLogger.warn("The email is already associated with a different user profile");
+            throw new UserProfileException(buildError("The provided email is already associated with another user profile", HttpStatus.BAD_REQUEST));
+        }
+
+        if (passwordEncoder.matches(request.getUserPassword(), user.getPassword())){
+            leLogger.warn("The provided password does not match the user one");
+            throw new UserProfileException(buildError("The provided password does not match your password.", HttpStatus.BAD_REQUEST));
+        }
+
+        leLogger.debug("Current authorization for {} & any related to him token will be removed", user.getUsername());
+
+        deleteUserJwtTokens(user);
+        ConfirmationToken token = ConfirmationToken.builder()
+                .user(user)
+                .tokenValue(UUID.randomUUID().toString())
+                .tokenType(TokenType.CONFIRMATION)
+                .expires(LocalDateTime.now().plusMinutes(15))
+                .build();
+        confirmationTokenRepository.save(token);
+
+        String encodedEmail = enDecEmail(request.getNewEmail(), "encode");
+
+        emailSender.send(request.getNewEmail(), changeEmailAddress(user.getFullName()
+         , "http://localhost:8080/edge-api/v1/profile/change-email/confirm?token=" + token.getTokenValue() + "&e=" + encodedEmail),
+                "LinkedEdge: Request to change your email address");
+
+        return ProfileEmailResponse.builder()
+                .path(getCurrentRequest())
+                .message("Email change request sent. Please confirm your new email address!")
+                .newEmail(request.getNewEmail())
+                .isEnabled(user.isEnabled())
+                .status(HttpStatus.OK)
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    private String enDecEmail(String email, String operation) {
+        byte[] bytes;
+        if(operation.equals("encode")){
+            bytes = email.getBytes(StandardCharsets.UTF_8);
+            return Base64.getEncoder().encodeToString(bytes);
+        } else {
+            bytes = Base64.getDecoder().decode(email);
+            return new String(bytes, StandardCharsets.UTF_8);
+        }
+    }
+
+    @Transactional
+    public ProfileEmailResponse verifyChangeUserEmail(String token, String email){
+        ConfirmationToken confirmationToken = confirmationTokenRepository.findByTokenValue(token)
+                .orElseThrow(() -> {
+                    leLogger.warn("Token not found");
+                    throw new RegistrationFailedException(
+                            buildError("Token not found. Please ensure you have the correct token or request a new one.", HttpStatus.NOT_FOUND)
+                    );
+                });
+
+        isValidToken(confirmationToken);
+        User user = confirmationToken.getUser();
+        confirmationTokenRepository.updateConfirmedAt(token, LocalDateTime.now());
+
+        String decodedEmail = enDecEmail(email, "decode");
+        user.setEmail(decodedEmail);
+
+        userRepository.save(user);
+
+        leLogger.info("The email has been changed successfully!");
+        return ProfileEmailResponse.builder()
+                .path(getCurrentRequest())
+                .message("Your email was been changed successfully.")
+                .status(HttpStatus.OK)
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
 
     public ProfileResponse updateUserMfa(@Valid ProfileMfaRequest request){
         User user = upUtils.findUserByContextHolder();
@@ -364,6 +459,33 @@ public class UserProfileService {
         } else {
             leLogger.info("Validation passed for: {}", toCheck);
         }
+    }
+
+    private void isValidToken(ConfirmationToken confirmationToken) {
+        if (confirmationToken.getConfirmed() != null) {
+            leLogger.warn("Token already confirmed: {}", confirmationToken.getParameters());
+            throw new RegistrationFailedException(
+                    buildError("The provided token has already been confirmed", HttpStatus.BAD_REQUEST));
+        }
+
+        if (confirmationToken.getExpires().isBefore(LocalDateTime.now())) {
+            leLogger.warn("Token has expired: {}", confirmationToken.getParameters());
+            throw new RegistrationFailedException(
+                    buildError("The provided token has expired. Please request a new one", HttpStatus.BAD_REQUEST)
+            );
+        }
+    }
+
+    private void deleteUserJwtTokens(User user) {
+        leLogger.warn("Revoking and deleting any tokens related to {}", user.getUsername());
+
+        List<JwtToken> tokens = jwtTokenRepository.findAllValidTokenByUserId(user.getId());
+        if (tokens.isEmpty()){
+            leLogger.info("No tokens found to delete");
+            return;
+        }
+
+        jwtTokenRepository.deleteAll(tokens);
     }
 
     private ApiError buildError(String message, HttpStatus status){
