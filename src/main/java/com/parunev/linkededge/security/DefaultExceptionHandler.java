@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -44,6 +45,11 @@ public class DefaultExceptionHandler {
     @ExceptionHandler({HttpStatusCodeException.class, HttpClientErrorException.class})
     public ResponseEntity<String> handleHttpStatusCodeException(HttpStatusCodeException ex){
         return new ResponseEntity<>(ex.getMessage(), ex.getStatusCode());
+    }
+
+    @ExceptionHandler(ResourceAccessException.class)
+    public ResponseEntity<String> handleResourceAccessException(ResourceAccessException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ReadingJsonNodeException.class)
