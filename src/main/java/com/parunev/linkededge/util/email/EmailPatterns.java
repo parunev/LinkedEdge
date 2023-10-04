@@ -648,9 +648,6 @@ public class EmailPatterns {
                 "<td align=\"center\" class=\"es-m-p0r es-m-p0l\" style=\"Margin:0;padding-top:5px;padding-bottom:5px;padding-left:40px;padding-right:40px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px\">Dear, <b>"+name+"</b>! You have requested to reset your <b>LinkedEdge</b> account password. We're here to help you regain access to your account. To reset your password please click the button below to verify your change.</p></td>\n" +
                 "</tr>\n" +
                 "<tr>\n" +
-                "<td align=\"center\" style=\"padding:0;Margin:0;padding-bottom:5px;padding-top:10px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px\">If you did not request this email, please disregard it.</p></td>\n" +
-                "</tr>\n" +
-                "<tr>\n" +
                 "<td align=\"center\" style=\"padding:0;Margin:0;padding-top:10px;padding-bottom:10px\"><!--[if mso]><a href=\"\" target=\"_blank\" hidden>\n" +
                 "<v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" esdevVmlButton href=\"\"\n" +
                 "style=\"height:44px; v-text-anchor:middle; width:293px\" arcsize=\"14%\" stroke=\"f\" fillcolor=\"#3d85c6\">\n" +
