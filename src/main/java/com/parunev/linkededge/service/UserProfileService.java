@@ -87,7 +87,7 @@ public class UserProfileService {
         leLogger.info("Password validations passed. User password will be changed");
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
-        emailSender.send(user.getEmail(), changeUserPasswordEmail(user.getUsername()), "LinkedEdge: Change Password (Do not ignore)");
+        emailSender.send(user.getEmail(), changeUserPasswordEmail(user.getFullName()), "LinkedEdge: Change Password (Do not ignore)");
 
         return ProfileChangePasswordResponse.builder()
                 .path(getCurrentRequest())

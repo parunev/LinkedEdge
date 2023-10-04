@@ -7,386 +7,711 @@ import lombok.NoArgsConstructor;
 public class EmailPatterns {
 
     public static String confirmationEmail(String name, String link) {
-        return "<div style=\"font-family: Helvetica, Arial, sans-serif; font-size: 16px; margin: 0; color: #b0c0c\">\n" +
-                "\n" +
-                "  <table role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; min-width: 100%; width: 100% !important\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
-                "    <tbody>\n" +
-                "      <tr>\n" +
-                "        <td width=\"100%\" height=\"53\" bgcolor=\"3399FF\">\n" +
-                "          <table role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; max-width: 580px\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n" +
-                "            <tbody>\n" +
-                "              <tr>\n" +
-                "                <td width=\"70\" bgcolor=\"#3399FF\" valign=\"middle\">\n" +
-                "                  <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse: collapse\">\n" +
-                "                    <tbody>\n" +
-                "                      <tr>\n" +
-                "                        <td style=\"padding-left: 10px\"></td>\n" +
-                "                        <td style=\"font-size: 28px; line-height: 1.315789474; Margin-top: 4px; padding-left: 10px\">\n" +
-                "                          <span style=\"font-family: Arial, Arial, sans-serif; font-weight: 100; color: #FFFF; text-decoration: none; vertical-align: top; display: inline-block\">Welcome to LinkedEdge!</span>\n" +
-                "                        </td>\n" +
-                "                      </tr>\n" +
-                "                    </tbody>\n" +
-                "                  </table>\n" +
-                "                </td>\n" +
-                "              </tr>\n" +
-                "            </tbody>\n" +
-                "          </table>\n" +
-                "        </td>\n" +
-                "      </tr>\n" +
-                "    </tbody>\n" +
-                "  </table>\n" +
-                " <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse: collapse; max-width: 580px; width: 100% !important\" width=\"100%\">\n" +
-                "    <tbody>\n" +
-                "      <tr>\n" +
-                "        <td width=\"10\" height=\"10\" valign=\"middle\"></td>\n" +
-                "        <td>\n" +
-                "          <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse: collapse\">\n" +
-                "            <tbody>\n" +
-                "              <tr>\n" +
-                "                <td bgcolor=\"#0370B8\" width=\"100%\" height=\"10\"></td>\n" +
-                "              </tr>\n" +
-                "            </tbody>\n" +
-                "          </table>\n" +
-                "        </td>\n" +
-                "        <td width=\"10\" valign=\"middle\" height=\"10\"></td>\n" +
-                "      </tr>\n" +
-                "    </tbody>\n" +
-                "  </table>\n" +
-                "\n" +
-                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse: collapse; max-width: 580px; width: 100% !important\" width=\"100%\">\n" +
-                "    <tbody>\n" +
-                "      <tr>\n" +
-                "        <td height=\"30\"><br></td>\n" +
-                "      </tr>\n" +
-                "      <tr>\n" +
-                "        <td width=\"10\" valign=\"middle\"><br></td>\n" +
-                "        <td style=\"font-family: Helvetica, Arial, sans-serif; font-size: 19px; line-height: 1.315789474; max-width: 560px\">\n" +
-                "          <p style=\"Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0b0c0c\">Dear <b>" + name + "</b>,</p>\n" +
-                "          <p style=\"Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0b0c0c\">Thank you for joining <b>LinkedEdge</b>, your AI Interview assistant for generating interview questions via LinkedIn. We're thrilled to have you as part of our community.</p>\n" +
-                "          <p style=\"Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0b0c0c\">To get started with and enhance your application experience, please verify your email address:</p>\n" +
-                "          <blockquote style=\"Margin: 0 0 20px 0; border-left: 10px solid #3399FF; padding: 15px 0 0.1px 15px; font-size: 19px; line-height: 25px\">\n" +
-                "            <p style=\"Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #1b1c1c\">\n" +
-                "              <a href=\"" + link + "\">Verify Email</a>\n" +
-                "            </p>\n" +
-                "          </blockquote>\n" +
-                "          <p style=\"color: #000;\">The verification link will expire in <b>24 hours</b>.</p>\n" +
-                "          <p style=\"color: #000;\">Best regards,<br>\n" +
-                "            <b>The LinkedEdge Team</b></p>\n" +
-                "        </td>\n" +
-                "        <td width=\"10\" valign=\"middle\"><br></td>\n" +
-                "      </tr>\n" +
-                "      <tr>\n" +
-                "        <td height=\"30\"><br></td>\n" +
-                "      </tr>\n" +
-                "    </tbody>\n" +
-                "  </table>\n" +
-                "  <div class=\"yj6qo\"></div>\n" +
-                "  <div class=\"adL\">\n" +
-                "  </div>\n" +
-                "</div>\n";
+        return "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" +
+                "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\">\n" +
+                "<head>\n" +
+                "<meta charset=\"UTF-8\">\n" +
+                "<meta content=\"width=device-width, initial-scale=1\" name=\"viewport\">\n" +
+                "<meta name=\"x-apple-disable-message-reformatting\">\n" +
+                "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+                "<meta content=\"telephone=no\" name=\"format-detection\">\n" +
+                "<style type=\"text/css\">\n" +
+                "a {text-decoration: none;}\n" +
+                "</style>\n" +
+                "<![endif]--><!--[if gte mso 9]><style>sup { font-size: 100% !important; }</style><![endif]--><!--[if gte mso 9]>\n" +
+                "<xml>\n" +
+                "<o:OfficeDocumentSettings>\n" +
+                "<o:AllowPNG></o:AllowPNG>\n" +
+                "<o:PixelsPerInch>96</o:PixelsPerInch>\n" +
+                "</o:OfficeDocumentSettings>\n" +
+                "</xml>\n" +
+                "<![endif]-->\n" +
+                "<style type=\"text/css\">\n" +
+                "#outlook a {\n" +
+                "padding:0;\n" +
+                "}\n" +
+                ".es-button {\n" +
+                "mso-style-priority:100!important;\n" +
+                "text-decoration:none!important;\n" +
+                "}\n" +
+                "a[x-apple-data-detectors] {\n" +
+                "color:inherit!important;\n" +
+                "text-decoration:none!important;\n" +
+                "font-size:inherit!important;\n" +
+                "font-family:inherit!important;\n" +
+                "font-weight:inherit!important;\n" +
+                "line-height:inherit!important;\n" +
+                "}\n" +
+                ".es-desk-hidden {\n" +
+                "display:none;\n" +
+                "float:left;\n" +
+                "overflow:hidden;\n" +
+                "width:0;\n" +
+                "max-height:0;\n" +
+                "line-height:0;\n" +
+                "mso-hide:all;\n" +
+                "}\n" +
+                "@media only screen and (max-width:600px) {p, ul li, ol li, a { line-height:150%!important } h1, h2, h3, h1 a, h2 a, h3 a { line-height:120% } h1 { font-size:36px!important; text-align:left } h2 { font-size:26px!important; text-align:left } h3 { font-size:20px!important; text-align:left } .es-header-body h1 a, .es-content-body h1 a, .es-footer-body h1 a { font-size:36px!important; text-align:left } .es-header-body h2 a, .es-content-body h2 a, .es-footer-body h2 a { font-size:26px!important; text-align:left } .es-header-body h3 a, .es-content-body h3 a, .es-footer-body h3 a { font-size:20px!important; text-align:left } .es-menu td a { font-size:12px!important } .es-header-body p, .es-header-body ul li, .es-header-body ol li, .es-header-body a { font-size:14px!important } .es-content-body p, .es-content-body ul li, .es-content-body ol li, .es-content-body a { font-size:16px!important } .es-footer-body p, .es-footer-body ul li, .es-footer-body ol li, .es-footer-body a { font-size:14px!important } .es-infoblock p, .es-infoblock ul li, .es-infoblock ol li, .es-infoblock a { font-size:12px!important } *[class=\"gmail-fix\"] { display:none!important } .es-m-txt-c, .es-m-txt-c h1, .es-m-txt-c h2, .es-m-txt-c h3 { text-align:center!important } .es-m-txt-r, .es-m-txt-r h1, .es-m-txt-r h2, .es-m-txt-r h3 { text-align:right!important } .es-m-txt-l, .es-m-txt-l h1, .es-m-txt-l h2, .es-m-txt-l h3 { text-align:left!important } .es-m-txt-r img, .es-m-txt-c img, .es-m-txt-l img { display:inline!important } .es-button-border { display:inline-block!important } a.es-button, button.es-button { font-size:20px!important; display:inline-block!important } .es-adaptive table, .es-left, .es-right { width:100%!important } .es-content table, .es-header table, .es-footer table, .es-content, .es-footer, .es-header { width:100%!important; max-width:600px!important } .es-adapt-td { display:block!important; width:100%!important } .adapt-img { width:100%!important; height:auto!important } .es-m-p0 { padding:0!important } .es-m-p0r { padding-right:0!important } .es-m-p0l { padding-left:0!important } .es-m-p0t { padding-top:0!important } .es-m-p0b { padding-bottom:0!important } .es-m-p20b { padding-bottom:20px!important } .es-mobile-hidden, .es-hidden { display:none!important } tr.es-desk-hidden, td.es-desk-hidden, table.es-desk-hidden { width:auto!important; overflow:visible!important; float:none!important; max-height:inherit!important; line-height:inherit!important } tr.es-desk-hidden { display:table-row!important } table.es-desk-hidden { display:table!important } td.es-desk-menu-hidden { display:table-cell!important } .es-menu td { width:1%!important } table.es-table-not-adapt, .esd-block-html table { width:auto!important } table.es-social { display:inline-block!important } table.es-social td { display:inline-block!important } .es-m-p5 { padding:5px!important } .es-m-p5t { padding-top:5px!important } .es-m-p5b { padding-bottom:5px!important } .es-m-p5r { padding-right:5px!important } .es-m-p5l { padding-left:5px!important } .es-m-p10 { padding:10px!important } .es-m-p10t { padding-top:10px!important } .es-m-p10b { padding-bottom:10px!important } .es-m-p10r { padding-right:10px!important } .es-m-p10l { padding-left:10px!important } .es-m-p15 { padding:15px!important } .es-m-p15t { padding-top:15px!important } .es-m-p15b { padding-bottom:15px!important } .es-m-p15r { padding-right:15px!important } .es-m-p15l { padding-left:15px!important } .es-m-p20 { padding:20px!important } .es-m-p20t { padding-top:20px!important } .es-m-p20r { padding-right:20px!important } .es-m-p20l { padding-left:20px!important } .es-m-p25 { padding:25px!important } .es-m-p25t { padding-top:25px!important } .es-m-p25b { padding-bottom:25px!important } .es-m-p25r { padding-right:25px!important } .es-m-p25l { padding-left:25px!important } .es-m-p30 { padding:30px!important } .es-m-p30t { padding-top:30px!important } .es-m-p30b { padding-bottom:30px!important } .es-m-p30r { padding-right:30px!important } .es-m-p30l { padding-left:30px!important } .es-m-p35 { padding:35px!important } .es-m-p35t { padding-top:35px!important } .es-m-p35b { padding-bottom:35px!important } .es-m-p35r { padding-right:35px!important } .es-m-p35l { padding-left:35px!important } .es-m-p40 { padding:40px!important } .es-m-p40t { padding-top:40px!important } .es-m-p40b { padding-bottom:40px!important } .es-m-p40r { padding-right:40px!important } .es-m-p40l { padding-left:40px!important } .es-desk-hidden { display:table-row!important; width:auto!important; overflow:visible!important; max-height:inherit!important } }\n" +
+                "</style>\n" +
+                "</head>\n" +
+                "<body style=\"width:100%;font-family:arial, 'helvetica neue', helvetica, sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0\">\n" +
+                "<div class=\"es-wrapper-color\" style=\"background-color:#FAFAFA\"><!--[if gte mso 9]>\n" +
+                "<v:background xmlns:v=\"urn:schemas-microsoft-com:vml\" fill=\"t\">\n" +
+                "<v:fill type=\"tile\" color=\"#fafafa\"></v:fill>\n" +
+                "</v:background>\n" +
+                "<![endif]-->\n" +
+                "<table class=\"es-wrapper\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;height:100%;background-repeat:repeat;background-position:center top;background-color:#FAFAFA\">\n" +
+                "<tr>\n" +
+                "<td valign=\"top\" style=\"padding:0;Margin:0\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-content\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%\">\n" +
+                "<tr>\n" +
+                "<td class=\"es-info-area\" align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table class=\"es-content-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px\" bgcolor=\"#FFFFFF\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"padding:20px;Margin:0\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" valign=\"top\" style=\"padding:0;Margin:0;width:560px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" role=\"presentation\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table>\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-header\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;background-color:transparent;background-repeat:repeat;background-position:center top\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table bgcolor=\"#ffffff\" class=\"es-header-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"Margin:0;padding-top:10px;padding-bottom:10px;padding-left:20px;padding-right:20px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td class=\"es-m-p0r\" valign=\"top\" align=\"center\" style=\"padding:0;Margin:0;width:560px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;display:none\"></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table>\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-content\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table bgcolor=\"#ffffff\" class=\"es-content-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#FFFFFF;width:600px\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"Margin:0;padding-left:20px;padding-right:20px;padding-top:30px;padding-bottom:30px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" valign=\"top\" style=\"padding:0;Margin:0;width:560px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" role=\"presentation\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px\"><img src=\"https://fccgnjt.stripocdn.email/content/guids/CABINET_0639b8c2743740d20ca3969afed3ef38cb92861a5dabac67fdd485ea06fbe02b/images/title.png\" alt style=\"display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic\" width=\"100\"></td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td align=\"center\" class=\"es-m-txt-c\" style=\"padding:0;Margin:0;padding-bottom:10px\"><h1 style=\"Margin:0;line-height:46px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:46px;font-style:normal;font-weight:bold;color:#333333\">Confirm Your Email</h1></td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td align=\"center\" class=\"es-m-p0r es-m-p0l\" style=\"Margin:0;padding-top:5px;padding-bottom:5px;padding-left:40px;padding-right:40px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px\">Dear, <b>" + name +"</b>! Thank you for joining <b>LinkedEdge</b>, your AI Interview assistant for generating interview questions via LinkedIn. We're thrilled to have you as part of our community. To enhance your experience and begin using LinkedEdge, please validate the owner of this account by clicking the button below to verify your email address.</p></td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;padding-bottom:5px;padding-top:10px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px\">If you did not register with us, please disregard this email.</p></td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;padding-top:10px;padding-bottom:10px\"><span class=\"es-button-border\" style=\"border-style:solid;border-color:#2CB543;background:#3d85c6;border-width:0px;display:inline-block;border-radius:6px;width:auto\"><a href=\"" + link + "\" class=\"es-button\" target=\"_blank\" style=\"mso-style-priority:100 !important;text-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#FFFFFF;font-size:20px;padding:10px 30px 10px 30px;display:inline-block;background:#3d85c6;border-radius:6px;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-weight:normal;font-style:normal;line-height:24px;width:auto;text-align:center;mso-padding-alt:0;mso-border-alt:10px solid #3d85c6;border-left-width:30px;border-right-width:30px\">CONFIRM YOUR EMAIL</a></span></td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td align=\"center\" class=\"es-m-p0r es-m-p0l\" style=\"Margin:0;padding-top:5px;padding-bottom:5px;padding-left:40px;padding-right:40px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px\">Upon confirmation of this email, you will be granted access to the application.</p></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table>\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-footer\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;background-color:transparent;background-repeat:repeat;background-position:center top\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table class=\"es-footer-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:640px\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"Margin:0;padding-top:20px;padding-bottom:20px;padding-left:20px;padding-right:20px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"padding:0;Margin:0;width:600px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" role=\"presentation\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;padding-bottom:35px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:18px;color:#333333;font-size:12px\">The verification process on LinkedEdge is available for 24 hours. After this time, you will need to request a new one © 2023 LinkedEdge, Inc. All Rights Reserved.<br></p></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table>\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-content\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%\">\n" +
+                "<tr>\n" +
+                "<td class=\"es-info-area\" align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table class=\"es-content-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px\" bgcolor=\"#FFFFFF\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"padding:20px;Margin:0\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" valign=\"top\" style=\"padding:0;Margin:0;width:560px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;display:none\"></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table>\n" +
+                "</div>\n" +
+                "</body>\n" +
+                "</html>";
     }
 
     public static String changeEmailAddress(String name, String link){
-        return "<div style=\"font-family: Helvetica, Arial, sans-serif; font-size: 16px; margin: 0; color: #b0c0c\">\n" +
-                "  <table role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; min-width: 100%; width: 100% !important\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
-                "    <tbody>\n" +
-                "      <tr>\n" +
-                "        <td width=\"100%\" height=\"53\" bgcolor=\"3399FF\">\n" +
-                "          <table role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; max-width: 580px\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n" +
-                "            <tbody>\n" +
-                "              <tr>\n" +
-                "                <td width=\"70\" bgcolor=\"#3399FF\" valign=\"middle\">\n" +
-                "                  <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse: collapse\">\n" +
-                "                    <tbody>\n" +
-                "                      <tr>\n" +
-                "                        <td style=\"padding-left: 10px\"></td>\n" +
-                "                        <td style=\"font-size: 28px; line-height: 1.315789474; Margin-top: 4px; padding-left: 10px\">\n" +
-                "                          <span style=\"font-family: Arial, Arial, sans-serif; font-weight: 100; color: #FFFF; text-decoration: none; vertical-align: top; display: inline-block\">Change Email Address</span>\n" +
-                "                        </td>\n" +
-                "                      </tr>\n" +
-                "                    </tbody>\n" +
-                "                  </table>\n" +
-                "                </td>\n" +
-                "              </tr>\n" +
-                "            </tbody>\n" +
-                "          </table>\n" +
-                "        </td>\n" +
-                "      </tr>\n" +
-                "    </tbody>\n" +
-                "  </table>\n" +
-                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse: collapse; max-width: 580px; width: 100% !important\" width=\"100%\">\n" +
-                "    <tbody>\n" +
-                "      <tr>\n" +
-                "        <td width=\"10\" height=\"10\" valign=\"middle\"></td>\n" +
-                "        <td>\n" +
-                "          <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse: collapse\">\n" +
-                "            <tbody>\n" +
-                "              <tr>\n" +
-                "                <td bgcolor=\"#0370B8\" width=\"100%\" height=\"10\"></td>\n" +
-                "              </tr>\n" +
-                "            </tbody>\n" +
-                "          </table>\n" +
-                "        </td>\n" +
-                "        <td width=\"10\" valign=\"middle\" height=\"10\"></td>\n" +
-                "      </tr>\n" +
-                "    </tbody>\n" +
-                "  </table>\n" +
-                "\n" +
-                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse: collapse; max-width: 580px; width: 100% !important\" width=\"100%\">\n" +
-                "    <tbody>\n" +
-                "      <tr>\n" +
-                "        <td height=\"30\"><br></td>\n" +
-                "      </tr>\n" +
-                "      <tr>\n" +
-                "        <td width=\"10\" valign=\"middle\"><br></td>\n" +
-                "        <td style=\"font-family: Helvetica, Arial, sans-serif; font-size: 19px; line-height: 1.315789474; max-width: 560px\">\n" +
-                "          <p style=\"Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0b0c0c\">Dear <b>" + name + "</b>,</p>\n" +
-                "          <p style=\"Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0b0c0c\">You've requested to change your email address for your <b>LinkedEdge</b> account. Please follow the instructions below to complete the process:</p>\n" +
-                "          <blockquote style=\"Margin: 0 0 20px 0; border-left: 10px solid #3399FF; padding: 15px 0 0.1px 15px; font-size: 19px; line-height: 25px\">\n" +
-                "            <p style=\"Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #1b1c1c\">\n" +
-                "              <a href=\"" + link + "\">Change Email Address</a>\n" +
-                "            </p>\n" +
-                "          </blockquote>\n" +
-                "          <p style=\"color: #000;\">This link will expire in <b>15 minutes</b>.</p>\n" +
-                "          <p style=\"color: #000;\">If you didn't request this change, please ignore this email.</p>\n" +
-                "          <p style=\"color: #000;\">Best regards,<br>\n" +
-                "            <b>The LinkedEdge Team</b></p>\n" +
-                "        </td>\n" +
-                "        <td width=\"10\" valign=\"middle\"><br></td>\n" +
-                "      </tr>\n" +
-                "      <tr>\n" +
-                "        <td height=\"30\"><br></td>\n" +
-                "      </tr>\n" +
-                "    </tbody>\n" +
-                "  </table>\n" +
-                "  <div class=\"yj6qo\"></div>\n" +
-                "  <div class=\"adL\">\n" +
-                "  </div>\n" +
-                "</div>\n";
+        return "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" +
+                "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\">\n" +
+                "<head>\n" +
+                "<meta charset=\"UTF-8\">\n" +
+                "<meta content=\"width=device-width, initial-scale=1\" name=\"viewport\">\n" +
+                "<meta name=\"x-apple-disable-message-reformatting\">\n" +
+                "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+                "<meta content=\"telephone=no\" name=\"format-detection\">\n" +
+                "<style type=\"text/css\">\n" +
+                "a {text-decoration: none;}\n" +
+                "</style>\n" +
+                "<![endif]--><!--[if gte mso 9]><style>sup { font-size: 100% !important; }</style><![endif]--><!--[if gte mso 9]>\n" +
+                "<xml>\n" +
+                "<o:OfficeDocumentSettings>\n" +
+                "<o:AllowPNG></o:AllowPNG>\n" +
+                "<o:PixelsPerInch>96</o:PixelsPerInch>\n" +
+                "</o:OfficeDocumentSettings>\n" +
+                "</xml>\n" +
+                "<![endif]-->\n" +
+                "<style type=\"text/css\">\n" +
+                "#outlook a {\n" +
+                "padding:0;\n" +
+                "}\n" +
+                ".es-button {\n" +
+                "mso-style-priority:100!important;\n" +
+                "text-decoration:none!important;\n" +
+                "}\n" +
+                "a[x-apple-data-detectors] {\n" +
+                "color:inherit!important;\n" +
+                "text-decoration:none!important;\n" +
+                "font-size:inherit!important;\n" +
+                "font-family:inherit!important;\n" +
+                "font-weight:inherit!important;\n" +
+                "line-height:inherit!important;\n" +
+                "}\n" +
+                ".es-desk-hidden {\n" +
+                "display:none;\n" +
+                "float:left;\n" +
+                "overflow:hidden;\n" +
+                "width:0;\n" +
+                "max-height:0;\n" +
+                "line-height:0;\n" +
+                "mso-hide:all;\n" +
+                "}\n" +
+                "@media only screen and (max-width:600px) {p, ul li, ol li, a { line-height:150%!important } h1, h2, h3, h1 a, h2 a, h3 a { line-height:120% } h1 { font-size:36px!important; text-align:left } h2 { font-size:26px!important; text-align:left } h3 { font-size:20px!important; text-align:left } .es-header-body h1 a, .es-content-body h1 a, .es-footer-body h1 a { font-size:36px!important; text-align:left } .es-header-body h2 a, .es-content-body h2 a, .es-footer-body h2 a { font-size:26px!important; text-align:left } .es-header-body h3 a, .es-content-body h3 a, .es-footer-body h3 a { font-size:20px!important; text-align:left } .es-menu td a { font-size:12px!important } .es-header-body p, .es-header-body ul li, .es-header-body ol li, .es-header-body a { font-size:14px!important } .es-content-body p, .es-content-body ul li, .es-content-body ol li, .es-content-body a { font-size:16px!important } .es-footer-body p, .es-footer-body ul li, .es-footer-body ol li, .es-footer-body a { font-size:14px!important } .es-infoblock p, .es-infoblock ul li, .es-infoblock ol li, .es-infoblock a { font-size:12px!important } *[class=\"gmail-fix\"] { display:none!important } .es-m-txt-c, .es-m-txt-c h1, .es-m-txt-c h2, .es-m-txt-c h3 { text-align:center!important } .es-m-txt-r, .es-m-txt-r h1, .es-m-txt-r h2, .es-m-txt-r h3 { text-align:right!important } .es-m-txt-l, .es-m-txt-l h1, .es-m-txt-l h2, .es-m-txt-l h3 { text-align:left!important } .es-m-txt-r img, .es-m-txt-c img, .es-m-txt-l img { display:inline!important } .es-button-border { display:inline-block!important } a.es-button, button.es-button { font-size:20px!important; display:inline-block!important } .es-adaptive table, .es-left, .es-right { width:100%!important } .es-content table, .es-header table, .es-footer table, .es-content, .es-footer, .es-header { width:100%!important; max-width:600px!important } .es-adapt-td { display:block!important; width:100%!important } .adapt-img { width:100%!important; height:auto!important } .es-m-p0 { padding:0!important } .es-m-p0r { padding-right:0!important } .es-m-p0l { padding-left:0!important } .es-m-p0t { padding-top:0!important } .es-m-p0b { padding-bottom:0!important } .es-m-p20b { padding-bottom:20px!important } .es-mobile-hidden, .es-hidden { display:none!important } tr.es-desk-hidden, td.es-desk-hidden, table.es-desk-hidden { width:auto!important; overflow:visible!important; float:none!important; max-height:inherit!important; line-height:inherit!important } tr.es-desk-hidden { display:table-row!important } table.es-desk-hidden { display:table!important } td.es-desk-menu-hidden { display:table-cell!important } .es-menu td { width:1%!important } table.es-table-not-adapt, .esd-block-html table { width:auto!important } table.es-social { display:inline-block!important } table.es-social td { display:inline-block!important } .es-m-p5 { padding:5px!important } .es-m-p5t { padding-top:5px!important } .es-m-p5b { padding-bottom:5px!important } .es-m-p5r { padding-right:5px!important } .es-m-p5l { padding-left:5px!important } .es-m-p10 { padding:10px!important } .es-m-p10t { padding-top:10px!important } .es-m-p10b { padding-bottom:10px!important } .es-m-p10r { padding-right:10px!important } .es-m-p10l { padding-left:10px!important } .es-m-p15 { padding:15px!important } .es-m-p15t { padding-top:15px!important } .es-m-p15b { padding-bottom:15px!important } .es-m-p15r { padding-right:15px!important } .es-m-p15l { padding-left:15px!important } .es-m-p20 { padding:20px!important } .es-m-p20t { padding-top:20px!important } .es-m-p20r { padding-right:20px!important } .es-m-p20l { padding-left:20px!important } .es-m-p25 { padding:25px!important } .es-m-p25t { padding-top:25px!important } .es-m-p25b { padding-bottom:25px!important } .es-m-p25r { padding-right:25px!important } .es-m-p25l { padding-left:25px!important } .es-m-p30 { padding:30px!important } .es-m-p30t { padding-top:30px!important } .es-m-p30b { padding-bottom:30px!important } .es-m-p30r { padding-right:30px!important } .es-m-p30l { padding-left:30px!important } .es-m-p35 { padding:35px!important } .es-m-p35t { padding-top:35px!important } .es-m-p35b { padding-bottom:35px!important } .es-m-p35r { padding-right:35px!important } .es-m-p35l { padding-left:35px!important } .es-m-p40 { padding:40px!important } .es-m-p40t { padding-top:40px!important } .es-m-p40b { padding-bottom:40px!important } .es-m-p40r { padding-right:40px!important } .es-m-p40l { padding-left:40px!important } .es-desk-hidden { display:table-row!important; width:auto!important; overflow:visible!important; max-height:inherit!important } }\n" +
+                "</style>\n" +
+                "</head>\n" +
+                "<body style=\"width:100%;font-family:arial, 'helvetica neue', helvetica, sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0\">\n" +
+                "<div class=\"es-wrapper-color\" style=\"background-color:#FAFAFA\"><!--[if gte mso 9]>\n" +
+                "<v:background xmlns:v=\"urn:schemas-microsoft-com:vml\" fill=\"t\">\n" +
+                "<v:fill type=\"tile\" color=\"#fafafa\"></v:fill>\n" +
+                "</v:background>\n" +
+                "<![endif]-->\n" +
+                "<table class=\"es-wrapper\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;height:100%;background-repeat:repeat;background-position:center top;background-color:#FAFAFA\">\n" +
+                "<tr>\n" +
+                "<td valign=\"top\" style=\"padding:0;Margin:0\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-content\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%\">\n" +
+                "<tr>\n" +
+                "<td class=\"es-info-area\" align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table class=\"es-content-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px\" bgcolor=\"#FFFFFF\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"padding:20px;Margin:0\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" valign=\"top\" style=\"padding:0;Margin:0;width:560px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" role=\"presentation\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table>\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-header\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;background-color:transparent;background-repeat:repeat;background-position:center top\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table bgcolor=\"#ffffff\" class=\"es-header-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"Margin:0;padding-top:10px;padding-bottom:10px;padding-left:20px;padding-right:20px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td class=\"es-m-p0r\" valign=\"top\" align=\"center\" style=\"padding:0;Margin:0;width:560px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;display:none\"></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table>\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-content\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table bgcolor=\"#ffffff\" class=\"es-content-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#FFFFFF;width:600px\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"Margin:0;padding-left:20px;padding-right:20px;padding-top:30px;padding-bottom:30px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" valign=\"top\" style=\"padding:0;Margin:0;width:560px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" role=\"presentation\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px\"><img src=\"https://fccgnjt.stripocdn.email/content/guids/CABINET_0639b8c2743740d20ca3969afed3ef38cb92861a5dabac67fdd485ea06fbe02b/images/title.png\" alt style=\"display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic\" width=\"100\"></td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td align=\"center\" class=\"es-m-txt-c\" style=\"padding:0;Margin:0;padding-bottom:10px\"><h1 style=\"Margin:0;line-height:46px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:46px;font-style:normal;font-weight:bold;color:#333333\">Change Email</h1></td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td align=\"center\" class=\"es-m-p0r es-m-p0l\" style=\"Margin:0;padding-top:5px;padding-bottom:5px;padding-left:40px;padding-right:40px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px\">Dear, <b>"+name+"</b>! You've requested to change your email address for your <b>LinkedEdge</b> account. Please follow the instructions below to complete the process. To continue using LinkedEdge, please validate the new email by clicking the button below to verify it.</p></td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;padding-bottom:5px;padding-top:10px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px\">If you did not request this email, please disregard it.</p></td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;padding-top:10px;padding-bottom:10px\"><!--[if mso]><a href=\"\" target=\"_blank\" hidden>\n" +
+                "<v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" esdevVmlButton href=\"\"\n" +
+                "style=\"height:44px; v-text-anchor:middle; width:301px\" arcsize=\"14%\" stroke=\"f\" fillcolor=\"#3d85c6\">\n" +
+                "<w:anchorlock></w:anchorlock>\n" +
+                "<center style='color:#ffffff; font-family:arial, \"helvetica neue\", helvetica, sans-serif; font-size:18px; font-weight:400; line-height:18px; mso-text-raise:1px'>CONFIRM YOUR EMAIL</center>\n" +
+                "</v:roundrect></a>\n" +
+                "<![endif]--><!--[if !mso]><!-- --><span class=\"es-button-border msohide\" style=\"border-style:solid;border-color:#2CB543;background:#3d85c6;border-width:0px;display:inline-block;border-radius:6px;width:auto;mso-hide:all\"><a href=\"" + link + "\" class=\"es-button\" target=\"_blank\" style=\"mso-style-priority:100 !important;text-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#FFFFFF;font-size:20px;padding:10px 30px 10px 30px;display:inline-block;background:#3d85c6;border-radius:6px;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-weight:normal;font-style:normal;line-height:24px;width:auto;text-align:center;mso-padding-alt:0;mso-border-alt:10px solid #3d85c6;border-left-width:30px;border-right-width:30px\">CONFIRM YOUR EMAIL</a></span><!--<![endif]--></td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td align=\"center\" class=\"es-m-p0r es-m-p0l\" style=\"Margin:0;padding-top:5px;padding-bottom:5px;padding-left:40px;padding-right:40px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px\">Upon confirmation of this email, you will be granted access to the application. Please note that the validity of this email is 15 minutes, after that, you will need to request again.</p></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table>\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-footer\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;background-color:transparent;background-repeat:repeat;background-position:center top\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table class=\"es-footer-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:640px\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"Margin:0;padding-top:20px;padding-bottom:20px;padding-left:20px;padding-right:20px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"padding:0;Margin:0;width:600px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" role=\"presentation\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;padding-bottom:35px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:18px;color:#333333;font-size:12px\">This email on LinkedEdge is available for 15 minutes. After this period, you'll have to request a new one © 2023 LinkedEdge, Inc. All Rights Reserved.</p></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table>\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-content\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%\">\n" +
+                "<tr>\n" +
+                "<td class=\"es-info-area\" align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table class=\"es-content-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px\" bgcolor=\"#FFFFFF\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"padding:20px;Margin:0\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" valign=\"top\" style=\"padding:0;Margin:0;width:560px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;display:none\"></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table>\n" +
+                "</div>\n" +
+                "</body>\n" +
+                "</html>";
     }
 
     public static String changeUserPasswordEmail(String name){
-        return "  <div style=\"font-family: Helvetica, Arial, sans-serif; font-size: 16px; margin: 0; color: #b0c0c\">\n" +
-                "  <table role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; min-width: 100%; width: 100% !important\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
-                "    <tbody>\n" +
-                "      <tr>\n" +
-                "        <td width=\"100%\" height=\"53\" bgcolor=\"3399FF\">\n" +
-                "          <table role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; max-width: 580px\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n" +
-                "            <tbody>\n" +
-                "              <tr>\n" +
-                "                <td width=\"70\" bgcolor=\"#3399FF\" valign=\"middle\">\n" +
-                "                  <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse: collapse\">\n" +
-                "                    <tbody>\n" +
-                "                      <tr>\n" +
-                "                        <td style=\"padding-left: 10px\"></td>\n" +
-                "                        <td style=\"font-size: 28px; line-height: 1.315789474; Margin-top: 4px; padding-left: 10px\">\n" +
-                "                          <span style=\"font-family: Arial, Arial, sans-serif; font-weight: 100; color: #FFFF; text-decoration: none; vertical-align: top; display: inline-block\">Change Password*</span>\n" +
-                "                        </td>\n" +
-                "                      </tr>\n" +
-                "                    </tbody>\n" +
-                "                  </table>\n" +
-                "                </td>\n" +
-                "              </tr>\n" +
-                "            </tbody>\n" +
-                "          </table>\n" +
-                "        </td>\n" +
-                "      </tr>\n" +
-                "    </tbody>\n" +
-                "  </table>\n" +
-                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse: collapse; max-width: 580px; width: 100% !important\" width=\"100%\">\n" +
-                "    <tbody>\n" +
-                "      <tr>\n" +
-                "        <td width=\"10\" height=\"10\" valign=\"middle\"></td>\n" +
-                "        <td>\n" +
-                "          <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse: collapse\">\n" +
-                "            <tbody>\n" +
-                "              <tr>\n" +
-                "                <td bgcolor=\"#0370B8\" width=\"100%\" height=\"10\"></td>\n" +
-                "              </tr>\n" +
-                "            </tbody>\n" +
-                "          </table>\n" +
-                "        </td>\n" +
-                "        <td width=\"10\" valign=\"middle\" height=\"10\"></td>\n" +
-                "      </tr>\n" +
-                "    </tbody>\n" +
-                "  </table>\n" +
-                "\n" +
-                "  <table role=\"presentation\" class=\"m_-6186904992287805515content\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse: collapse; max-width: 580px; width: 100% !important\" width=\"100%\">\n" +
-                "    <tbody>\n" +
-                "      <tr>\n" +
-                "        <td height=\"30\"><br></td>\n" +
-                "      </tr>\n" +
-                "      <tr>\n" +
-                "        <td width=\"10\" valign=\"middle\"><br></td>\n" +
-                "        <td style=\"font-family: Helvetica, Arial, sans-serif; font-size: 19px; line-height: 1.315789474; max-width: 560px\">\n" +
-                "          <p style=\"Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0b0c0c\">Dear <b>" + name + "</b>,</p>\n" +
-                "          <p style=\"Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0b0c0c\">You have initiated a password change request for your <b>LinkedEdge</b> account.</p>\n" +
-                "          \n" +
-                "          <p style=\"color: #000;\">If you did not initiate this password change request, please do not ignore this email. For your account's security, we recommend contacting our support team immediately.</p>\n" +
-                "          <p style=\"color: #000;\">Best regards,<br>\n" +
-                "            <b>The LinkedEdge Team</b></p>\n" +
-                "        </td>\n" +
-                "        <td width=\"10\" valign=\"middle\"><br></td>\n" +
-                "      </tr>\n" +
-                "      <tr>\n" +
-                "        <td height=\"30\"><br></td>\n" +
-                "      </tr>\n" +
-                "    </tbody>\n" +
-                "  </table>\n" +
-                "  <div class=\"yj6qo\"></div>\n" +
-                "  <div class=\"adL\">\n" +
-                "  </div>\n" +
-                "</div>\n";
+        return "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" +
+                "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\">\n" +
+                "<head>\n" +
+                "<meta charset=\"UTF-8\">\n" +
+                "<meta content=\"width=device-width, initial-scale=1\" name=\"viewport\">\n" +
+                "<meta name=\"x-apple-disable-message-reformatting\">\n" +
+                "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+                "<meta content=\"telephone=no\" name=\"format-detection\">\n" +
+                "<style type=\"text/css\">\n" +
+                "a {text-decoration: none;}\n" +
+                "</style>\n" +
+                "<![endif]--><!--[if gte mso 9]><style>sup { font-size: 100% !important; }</style><![endif]--><!--[if gte mso 9]>\n" +
+                "<xml>\n" +
+                "<o:OfficeDocumentSettings>\n" +
+                "<o:AllowPNG></o:AllowPNG>\n" +
+                "<o:PixelsPerInch>96</o:PixelsPerInch>\n" +
+                "</o:OfficeDocumentSettings>\n" +
+                "</xml>\n" +
+                "<![endif]-->\n" +
+                "<style type=\"text/css\">\n" +
+                "#outlook a {\n" +
+                "padding:0;\n" +
+                "}\n" +
+                ".es-button {\n" +
+                "mso-style-priority:100!important;\n" +
+                "text-decoration:none!important;\n" +
+                "}\n" +
+                "a[x-apple-data-detectors] {\n" +
+                "color:inherit!important;\n" +
+                "text-decoration:none!important;\n" +
+                "font-size:inherit!important;\n" +
+                "font-family:inherit!important;\n" +
+                "font-weight:inherit!important;\n" +
+                "line-height:inherit!important;\n" +
+                "}\n" +
+                ".es-desk-hidden {\n" +
+                "display:none;\n" +
+                "float:left;\n" +
+                "overflow:hidden;\n" +
+                "width:0;\n" +
+                "max-height:0;\n" +
+                "line-height:0;\n" +
+                "mso-hide:all;\n" +
+                "}\n" +
+                "@media only screen and (max-width:600px) {p, ul li, ol li, a { line-height:150%!important } h1, h2, h3, h1 a, h2 a, h3 a { line-height:120% } h1 { font-size:36px!important; text-align:left } h2 { font-size:26px!important; text-align:left } h3 { font-size:20px!important; text-align:left } .es-header-body h1 a, .es-content-body h1 a, .es-footer-body h1 a { font-size:36px!important; text-align:left } .es-header-body h2 a, .es-content-body h2 a, .es-footer-body h2 a { font-size:26px!important; text-align:left } .es-header-body h3 a, .es-content-body h3 a, .es-footer-body h3 a { font-size:20px!important; text-align:left } .es-menu td a { font-size:12px!important } .es-header-body p, .es-header-body ul li, .es-header-body ol li, .es-header-body a { font-size:14px!important } .es-content-body p, .es-content-body ul li, .es-content-body ol li, .es-content-body a { font-size:16px!important } .es-footer-body p, .es-footer-body ul li, .es-footer-body ol li, .es-footer-body a { font-size:14px!important } .es-infoblock p, .es-infoblock ul li, .es-infoblock ol li, .es-infoblock a { font-size:12px!important } *[class=\"gmail-fix\"] { display:none!important } .es-m-txt-c, .es-m-txt-c h1, .es-m-txt-c h2, .es-m-txt-c h3 { text-align:center!important } .es-m-txt-r, .es-m-txt-r h1, .es-m-txt-r h2, .es-m-txt-r h3 { text-align:right!important } .es-m-txt-l, .es-m-txt-l h1, .es-m-txt-l h2, .es-m-txt-l h3 { text-align:left!important } .es-m-txt-r img, .es-m-txt-c img, .es-m-txt-l img { display:inline!important } .es-button-border { display:inline-block!important } a.es-button, button.es-button { font-size:20px!important; display:inline-block!important } .es-adaptive table, .es-left, .es-right { width:100%!important } .es-content table, .es-header table, .es-footer table, .es-content, .es-footer, .es-header { width:100%!important; max-width:600px!important } .es-adapt-td { display:block!important; width:100%!important } .adapt-img { width:100%!important; height:auto!important } .es-m-p0 { padding:0!important } .es-m-p0r { padding-right:0!important } .es-m-p0l { padding-left:0!important } .es-m-p0t { padding-top:0!important } .es-m-p0b { padding-bottom:0!important } .es-m-p20b { padding-bottom:20px!important } .es-mobile-hidden, .es-hidden { display:none!important } tr.es-desk-hidden, td.es-desk-hidden, table.es-desk-hidden { width:auto!important; overflow:visible!important; float:none!important; max-height:inherit!important; line-height:inherit!important } tr.es-desk-hidden { display:table-row!important } table.es-desk-hidden { display:table!important } td.es-desk-menu-hidden { display:table-cell!important } .es-menu td { width:1%!important } table.es-table-not-adapt, .esd-block-html table { width:auto!important } table.es-social { display:inline-block!important } table.es-social td { display:inline-block!important } .es-m-p5 { padding:5px!important } .es-m-p5t { padding-top:5px!important } .es-m-p5b { padding-bottom:5px!important } .es-m-p5r { padding-right:5px!important } .es-m-p5l { padding-left:5px!important } .es-m-p10 { padding:10px!important } .es-m-p10t { padding-top:10px!important } .es-m-p10b { padding-bottom:10px!important } .es-m-p10r { padding-right:10px!important } .es-m-p10l { padding-left:10px!important } .es-m-p15 { padding:15px!important } .es-m-p15t { padding-top:15px!important } .es-m-p15b { padding-bottom:15px!important } .es-m-p15r { padding-right:15px!important } .es-m-p15l { padding-left:15px!important } .es-m-p20 { padding:20px!important } .es-m-p20t { padding-top:20px!important } .es-m-p20r { padding-right:20px!important } .es-m-p20l { padding-left:20px!important } .es-m-p25 { padding:25px!important } .es-m-p25t { padding-top:25px!important } .es-m-p25b { padding-bottom:25px!important } .es-m-p25r { padding-right:25px!important } .es-m-p25l { padding-left:25px!important } .es-m-p30 { padding:30px!important } .es-m-p30t { padding-top:30px!important } .es-m-p30b { padding-bottom:30px!important } .es-m-p30r { padding-right:30px!important } .es-m-p30l { padding-left:30px!important } .es-m-p35 { padding:35px!important } .es-m-p35t { padding-top:35px!important } .es-m-p35b { padding-bottom:35px!important } .es-m-p35r { padding-right:35px!important } .es-m-p35l { padding-left:35px!important } .es-m-p40 { padding:40px!important } .es-m-p40t { padding-top:40px!important } .es-m-p40b { padding-bottom:40px!important } .es-m-p40r { padding-right:40px!important } .es-m-p40l { padding-left:40px!important } .es-desk-hidden { display:table-row!important; width:auto!important; overflow:visible!important; max-height:inherit!important } }\n" +
+                "</style>\n" +
+                "</head>\n" +
+                "<body style=\"width:100%;font-family:arial, 'helvetica neue', helvetica, sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0\">\n" +
+                "<div class=\"es-wrapper-color\" style=\"background-color:#FAFAFA\"><!--[if gte mso 9]>\n" +
+                "<v:background xmlns:v=\"urn:schemas-microsoft-com:vml\" fill=\"t\">\n" +
+                "<v:fill type=\"tile\" color=\"#fafafa\"></v:fill>\n" +
+                "</v:background>\n" +
+                "<![endif]-->\n" +
+                "<table class=\"es-wrapper\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;height:100%;background-repeat:repeat;background-position:center top;background-color:#FAFAFA\">\n" +
+                "<tr>\n" +
+                "<td valign=\"top\" style=\"padding:0;Margin:0\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-content\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%\">\n" +
+                "<tr>\n" +
+                "<td class=\"es-info-area\" align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table class=\"es-content-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px\" bgcolor=\"#FFFFFF\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"padding:20px;Margin:0\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" valign=\"top\" style=\"padding:0;Margin:0;width:560px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" role=\"presentation\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table>\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-header\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;background-color:transparent;background-repeat:repeat;background-position:center top\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table bgcolor=\"#ffffff\" class=\"es-header-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"Margin:0;padding-top:10px;padding-bottom:10px;padding-left:20px;padding-right:20px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td class=\"es-m-p0r\" valign=\"top\" align=\"center\" style=\"padding:0;Margin:0;width:560px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;display:none\"></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table>\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-content\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table bgcolor=\"#ffffff\" class=\"es-content-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#FFFFFF;width:600px\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"Margin:0;padding-left:20px;padding-right:20px;padding-top:30px;padding-bottom:30px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" valign=\"top\" style=\"padding:0;Margin:0;width:560px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" role=\"presentation\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px\"><img src=\"https://fccgnjt.stripocdn.email/content/guids/CABINET_0639b8c2743740d20ca3969afed3ef38cb92861a5dabac67fdd485ea06fbe02b/images/title.png\" alt style=\"display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic\" width=\"100\"></td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td align=\"center\" class=\"es-m-txt-c\" style=\"padding:0;Margin:0;padding-bottom:10px\"><h1 style=\"Margin:0;line-height:46px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:46px;font-style:normal;font-weight:bold;color:#333333\">Changed Password</h1></td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td align=\"center\" class=\"es-m-p0r es-m-p0l\" style=\"Margin:0;padding-top:5px;padding-bottom:5px;padding-left:40px;padding-right:40px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px\">Dear, <b>"+name+"</b>! You have initiated a password change request for your <b>LinkedEdge</b> account.&nbsp;</p><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px\"><br></p></td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td align=\"center\" class=\"es-m-p0r es-m-p0l\" style=\"Margin:0;padding-top:5px;padding-bottom:5px;padding-left:40px;padding-right:40px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px\">If you did not initiate this password change request, please do not ignore this email. For your account's security, we recommend contacting our support team immediately. Please note that the validity of this email is 15 minutes, after that, you will need to contact us again.</p></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table>\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-footer\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;background-color:transparent;background-repeat:repeat;background-position:center top\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table class=\"es-footer-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:640px\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"Margin:0;padding-top:20px;padding-bottom:20px;padding-left:20px;padding-right:20px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"padding:0;Margin:0;width:600px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" role=\"presentation\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;padding-bottom:35px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:18px;color:#333333;font-size:12px\">© 2023 LinkedEdge, Inc. All Rights Reserved.</p></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table>\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-content\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%\">\n" +
+                "<tr>\n" +
+                "<td class=\"es-info-area\" align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table class=\"es-content-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px\" bgcolor=\"#FFFFFF\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"padding:20px;Margin:0\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" valign=\"top\" style=\"padding:0;Margin:0;width:560px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;display:none\"></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table>\n" +
+                "</div>\n" +
+                "</body>\n" +
+                "</html>";
     }
 
     public static String forgotPasswordEmail(String name, String link) {
-        return "<!DOCTYPE html>\n" +
-                "<html>\n" +
+        return "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" +
+                "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\">\n" +
                 "<head>\n" +
-                "    <style>\n" +
-                "        body {\n" +
-                "            font-family: Arial, sans-serif;\n" +
-                "            font-size: 16px;\n" +
-                "            margin: 0;\n" +
-                "            color: #1b1c1c;\n" +
-                "        }\n" +
-                "\n" +
-                "        .email-container {\n" +
-                "            border-collapse: collapse;\n" +
-                "            min-width: 100%;\n" +
-                "            width: 100% !important;\n" +
-                "        }\n" +
-                "\n" +
-                "        .header {\n" +
-                "            background-color: #3399FF;\n" +
-                "        }\n" +
-                "\n" +
-                "        .header-content {\n" +
-                "            max-width: 580px;\n" +
-                "            padding-left: 10px;\n" +
-                "            padding-right: 10px;\n" +
-                "        }\n" +
-                "\n" +
-                "        .header-title {\n" +
-                "            font-size: 28px;\n" +
-                "            line-height: 1.315789474;\n" +
-                "            margin-top: 4px;\n" +
-                "            padding-left: 10px;\n" +
-                "            font-weight: 100;\n" +
-                "            color: #FFFFFF;\n" +
-                "        }\n" +
-                "\n" +
-                "        .divider {\n" +
-                "            background-color: #0370B8;\n" +
-                "        }\n" +
-                "\n" +
-                "        .content-container {\n" +
-                "            max-width: 580px;\n" +
-                "            width: 100% !important;\n" +
-                "            margin-top: 30px;\n" +
-                "        }\n" +
-                "\n" +
-                "        .content-text {\n" +
-                "            font-family: Helvetica, Arial, sans-serif;\n" +
-                "            font-size: 19px;\n" +
-                "            line-height: 1.315789474;\n" +
-                "            max-width: 560px;\n" +
-                "        }\n" +
-                "\n" +
-                "        .content-text p {\n" +
-                "            margin: 0 0 20px 0;\n" +
-                "            font-size: 19px;\n" +
-                "            line-height: 25px;\n" +
-                "        }\n" +
-                "\n" +
-                "        .verification-link {\n" +
-                "            border-left: 10px solid #3399FF;\n" +
-                "            padding: 15px 0 0.1px 15px;\n" +
-                "            font-size: 19px;\n" +
-                "            line-height: 25px;\n" +
-                "        }\n" +
-                "\n" +
-                "        .verification-link a {\n" +
-                "            color: #1b1c1c;\n" +
-                "        }\n" +
-                "    </style>\n" +
+                "<meta charset=\"UTF-8\">\n" +
+                "<meta content=\"width=device-width, initial-scale=1\" name=\"viewport\">\n" +
+                "<meta name=\"x-apple-disable-message-reformatting\">\n" +
+                "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+                "<meta content=\"telephone=no\" name=\"format-detection\">\n" +
+                "<style type=\"text/css\">\n" +
+                "a {text-decoration: none;}\n" +
+                "</style>\n" +
+                "<![endif]--><!--[if gte mso 9]><style>sup { font-size: 100% !important; }</style><![endif]--><!--[if gte mso 9]>\n" +
+                "<xml>\n" +
+                "<o:OfficeDocumentSettings>\n" +
+                "<o:AllowPNG></o:AllowPNG>\n" +
+                "<o:PixelsPerInch>96</o:PixelsPerInch>\n" +
+                "</o:OfficeDocumentSettings>\n" +
+                "</xml>\n" +
+                "<![endif]-->\n" +
+                "<style type=\"text/css\">\n" +
+                "#outlook a {\n" +
+                "padding:0;\n" +
+                "}\n" +
+                ".es-button {\n" +
+                "mso-style-priority:100!important;\n" +
+                "text-decoration:none!important;\n" +
+                "}\n" +
+                "a[x-apple-data-detectors] {\n" +
+                "color:inherit!important;\n" +
+                "text-decoration:none!important;\n" +
+                "font-size:inherit!important;\n" +
+                "font-family:inherit!important;\n" +
+                "font-weight:inherit!important;\n" +
+                "line-height:inherit!important;\n" +
+                "}\n" +
+                ".es-desk-hidden {\n" +
+                "display:none;\n" +
+                "float:left;\n" +
+                "overflow:hidden;\n" +
+                "width:0;\n" +
+                "max-height:0;\n" +
+                "line-height:0;\n" +
+                "mso-hide:all;\n" +
+                "}\n" +
+                "@media only screen and (max-width:600px) {p, ul li, ol li, a { line-height:150%!important } h1, h2, h3, h1 a, h2 a, h3 a { line-height:120% } h1 { font-size:36px!important; text-align:left } h2 { font-size:26px!important; text-align:left } h3 { font-size:20px!important; text-align:left } .es-header-body h1 a, .es-content-body h1 a, .es-footer-body h1 a { font-size:36px!important; text-align:left } .es-header-body h2 a, .es-content-body h2 a, .es-footer-body h2 a { font-size:26px!important; text-align:left } .es-header-body h3 a, .es-content-body h3 a, .es-footer-body h3 a { font-size:20px!important; text-align:left } .es-menu td a { font-size:12px!important } .es-header-body p, .es-header-body ul li, .es-header-body ol li, .es-header-body a { font-size:14px!important } .es-content-body p, .es-content-body ul li, .es-content-body ol li, .es-content-body a { font-size:16px!important } .es-footer-body p, .es-footer-body ul li, .es-footer-body ol li, .es-footer-body a { font-size:14px!important } .es-infoblock p, .es-infoblock ul li, .es-infoblock ol li, .es-infoblock a { font-size:12px!important } *[class=\"gmail-fix\"] { display:none!important } .es-m-txt-c, .es-m-txt-c h1, .es-m-txt-c h2, .es-m-txt-c h3 { text-align:center!important } .es-m-txt-r, .es-m-txt-r h1, .es-m-txt-r h2, .es-m-txt-r h3 { text-align:right!important } .es-m-txt-l, .es-m-txt-l h1, .es-m-txt-l h2, .es-m-txt-l h3 { text-align:left!important } .es-m-txt-r img, .es-m-txt-c img, .es-m-txt-l img { display:inline!important } .es-button-border { display:inline-block!important } a.es-button, button.es-button { font-size:20px!important; display:inline-block!important } .es-adaptive table, .es-left, .es-right { width:100%!important } .es-content table, .es-header table, .es-footer table, .es-content, .es-footer, .es-header { width:100%!important; max-width:600px!important } .es-adapt-td { display:block!important; width:100%!important } .adapt-img { width:100%!important; height:auto!important } .es-m-p0 { padding:0!important } .es-m-p0r { padding-right:0!important } .es-m-p0l { padding-left:0!important } .es-m-p0t { padding-top:0!important } .es-m-p0b { padding-bottom:0!important } .es-m-p20b { padding-bottom:20px!important } .es-mobile-hidden, .es-hidden { display:none!important } tr.es-desk-hidden, td.es-desk-hidden, table.es-desk-hidden { width:auto!important; overflow:visible!important; float:none!important; max-height:inherit!important; line-height:inherit!important } tr.es-desk-hidden { display:table-row!important } table.es-desk-hidden { display:table!important } td.es-desk-menu-hidden { display:table-cell!important } .es-menu td { width:1%!important } table.es-table-not-adapt, .esd-block-html table { width:auto!important } table.es-social { display:inline-block!important } table.es-social td { display:inline-block!important } .es-m-p5 { padding:5px!important } .es-m-p5t { padding-top:5px!important } .es-m-p5b { padding-bottom:5px!important } .es-m-p5r { padding-right:5px!important } .es-m-p5l { padding-left:5px!important } .es-m-p10 { padding:10px!important } .es-m-p10t { padding-top:10px!important } .es-m-p10b { padding-bottom:10px!important } .es-m-p10r { padding-right:10px!important } .es-m-p10l { padding-left:10px!important } .es-m-p15 { padding:15px!important } .es-m-p15t { padding-top:15px!important } .es-m-p15b { padding-bottom:15px!important } .es-m-p15r { padding-right:15px!important } .es-m-p15l { padding-left:15px!important } .es-m-p20 { padding:20px!important } .es-m-p20t { padding-top:20px!important } .es-m-p20r { padding-right:20px!important } .es-m-p20l { padding-left:20px!important } .es-m-p25 { padding:25px!important } .es-m-p25t { padding-top:25px!important } .es-m-p25b { padding-bottom:25px!important } .es-m-p25r { padding-right:25px!important } .es-m-p25l { padding-left:25px!important } .es-m-p30 { padding:30px!important } .es-m-p30t { padding-top:30px!important } .es-m-p30b { padding-bottom:30px!important } .es-m-p30r { padding-right:30px!important } .es-m-p30l { padding-left:30px!important } .es-m-p35 { padding:35px!important } .es-m-p35t { padding-top:35px!important } .es-m-p35b { padding-bottom:35px!important } .es-m-p35r { padding-right:35px!important } .es-m-p35l { padding-left:35px!important } .es-m-p40 { padding:40px!important } .es-m-p40t { padding-top:40px!important } .es-m-p40b { padding-bottom:40px!important } .es-m-p40r { padding-right:40px!important } .es-m-p40l { padding-left:40px!important } .es-desk-hidden { display:table-row!important; width:auto!important; overflow:visible!important; max-height:inherit!important } }\n" +
+                "</style>\n" +
                 "</head>\n" +
-                "<body>\n" +
-                "<table class=\"email-container\" role=\"presentation\" width=\"100%\">\n" +
-                "    <tbody>\n" +
-                "    <tr>\n" +
-                "        <td class=\"header\" height=\"53\">\n" +
-                "            <table class=\"header-content\" role=\"presentation\" width=\"100%\">\n" +
-                "                <tbody>\n" +
-                "                <tr>\n" +
-                "                    <td width=\"70\" class=\"header-title\" valign=\"middle\">\n" +
-                "                        <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"\n" +
-                "                               style=\"border-collapse: collapse\">\n" +
-                "                            <tbody>\n" +
-                "                            <tr>\n" +
-                "                                <td style=\"padding-left: 10px\"></td>\n" +
-                "                                <td>\n" +
-                "                                    <span>Welcome to LinkedEdge!</span>\n" +
-                "                                </td>\n" +
-                "                            </tr>\n" +
-                "                            </tbody>\n" +
-                "                        </table>\n" +
-                "                    </td>\n" +
-                "                </tr>\n" +
-                "                </tbody>\n" +
-                "            </table>\n" +
-                "        </td>\n" +
-                "    </tr>\n" +
-                "    </tbody>\n" +
+                "<body style=\"width:100%;font-family:arial, 'helvetica neue', helvetica, sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0\">\n" +
+                "<div class=\"es-wrapper-color\" style=\"background-color:#FAFAFA\"><!--[if gte mso 9]>\n" +
+                "<v:background xmlns:v=\"urn:schemas-microsoft-com:vml\" fill=\"t\">\n" +
+                "<v:fill type=\"tile\" color=\"#fafafa\"></v:fill>\n" +
+                "</v:background>\n" +
+                "<![endif]-->\n" +
+                "<table class=\"es-wrapper\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;height:100%;background-repeat:repeat;background-position:center top;background-color:#FAFAFA\">\n" +
+                "<tr>\n" +
+                "<td valign=\"top\" style=\"padding:0;Margin:0\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-content\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%\">\n" +
+                "<tr>\n" +
+                "<td class=\"es-info-area\" align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table class=\"es-content-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px\" bgcolor=\"#FFFFFF\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"padding:20px;Margin:0\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" valign=\"top\" style=\"padding:0;Margin:0;width:560px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" role=\"presentation\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
                 "</table>\n" +
-                "<table role=\"presentation\" class=\"divider\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"\n" +
-                "       style=\"border-collapse: collapse; max-width: 580px; width: 100% !important\">\n" +
-                "    <tbody>\n" +
-                "    <tr>\n" +
-                "        <td width=\"10\" height=\"10\" valign=\"middle\"></td>\n" +
-                "        <td>\n" +
-                "            <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"\n" +
-                "                   style=\"border-collapse: collapse\">\n" +
-                "                <tbody>\n" +
-                "                <tr>\n" +
-                "                    <td bgcolor=\"#0370B8\" width=\"100%\" height=\"10\"></td>\n" +
-                "                </tr>\n" +
-                "                </tbody>\n" +
-                "            </table>\n" +
-                "        </td>\n" +
-                "        <td width=\"10\" valign=\"middle\" height=\"10\"></td>\n" +
-                "    </tr>\n" +
-                "    </tbody>\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-header\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;background-color:transparent;background-repeat:repeat;background-position:center top\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table bgcolor=\"#ffffff\" class=\"es-header-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"Margin:0;padding-top:10px;padding-bottom:10px;padding-left:20px;padding-right:20px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td class=\"es-m-p0r\" valign=\"top\" align=\"center\" style=\"padding:0;Margin:0;width:560px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;display:none\"></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
                 "</table>\n" +
-                "<table role=\"presentation\" class=\"content-container\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"\n" +
-                "       style=\"border-collapse: collapse; max-width: 580px; width: 100% !important\">\n" +
-                "    <tbody>\n" +
-                "    <tr>\n" +
-                "        <td height=\"30\"><br></td>\n" +
-                "    </tr>\n" +
-                "    <tr>\n" +
-                "        <td width=\"10\" valign=\"middle\"><br></td>\n" +
-                "        <td class=\"content-text\">\n" +
-                "            <p>Dear <b>" + name + "</b>,</p>\n" +
-                "            <p>You have requested to reset your <b>LinkedEdge</b> account password. We're here to help you regain access to your account.</p>\n" +
-                "            <p>To reset your password, please click the link below:</p>\n" +
-                "            <blockquote class=\"verification-link\">\n" +
-                "                <p>\n" +
-                "                    <a href=\"" + link + "\">Reset Password</a>\n" +
-                "                </p>\n" +
-                "            </blockquote>\n" +
-                "            <p>If you did not request this change, please ignore this email, and your password will remain unchanged.</p>\n" +
-                "            <p>This password reset link will expire in 24 hours for security reasons.</p>\n" +
-                "            <p>Best regards,<br>\n" +
-                "                <b>The LinkedEdge Team</b></p>\n" +
-                "        </td>\n" +
-                "        <td width=\"10\" valign=\"middle\"><br></td>\n" +
-                "    </tr>\n" +
-                "    <tr>\n" +
-                "        <td height=\"30\"><br></td>\n" +
-                "    </tr>\n" +
-                "    </tbody>\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-content\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table bgcolor=\"#ffffff\" class=\"es-content-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#FFFFFF;width:600px\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"Margin:0;padding-left:20px;padding-right:20px;padding-top:30px;padding-bottom:30px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" valign=\"top\" style=\"padding:0;Margin:0;width:560px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" role=\"presentation\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px\"><img src=\"https://fccgnjt.stripocdn.email/content/guids/CABINET_0639b8c2743740d20ca3969afed3ef38cb92861a5dabac67fdd485ea06fbe02b/images/title.png\" alt style=\"display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic\" width=\"100\"></td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td align=\"center\" class=\"es-m-txt-c\" style=\"padding:0;Margin:0;padding-bottom:10px\"><h1 style=\"Margin:0;line-height:46px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:46px;font-style:normal;font-weight:bold;color:#333333\">Reset Password</h1></td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td align=\"center\" class=\"es-m-p0r es-m-p0l\" style=\"Margin:0;padding-top:5px;padding-bottom:5px;padding-left:40px;padding-right:40px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px\">Dear, <b>"+name+"</b>! You have requested to reset your <b>LinkedEdge</b> account password. We're here to help you regain access to your account. To reset your password please click the button below to verify your change.</p></td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;padding-bottom:5px;padding-top:10px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px\">If you did not request this email, please disregard it.</p></td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;padding-top:10px;padding-bottom:10px\"><!--[if mso]><a href=\"\" target=\"_blank\" hidden>\n" +
+                "<v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" esdevVmlButton href=\"\"\n" +
+                "style=\"height:44px; v-text-anchor:middle; width:293px\" arcsize=\"14%\" stroke=\"f\" fillcolor=\"#3d85c6\">\n" +
+                "<w:anchorlock></w:anchorlock>\n" +
+                "<center style='color:#ffffff; font-family:arial, \"helvetica neue\", helvetica, sans-serif; font-size:18px; font-weight:400; line-height:18px; mso-text-raise:1px'>RESET PASSWORD</center>\n" +
+                "</v:roundrect></a>\n" +
+                "<![endif]--><!--[if !mso]><!-- --><span class=\"msohide es-button-border\" style=\"border-style:solid;border-color:#2CB543;background:#3d85c6;border-width:0px;display:inline-block;border-radius:6px;width:auto;mso-hide:all\"><a href=\""+link+"\" class=\"es-button\" target=\"_blank\" style=\"mso-style-priority:100 !important;text-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#FFFFFF;font-size:20px;padding:10px 30px 10px 30px;display:inline-block;background:#3d85c6;border-radius:6px;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-weight:normal;font-style:normal;line-height:24px;width:auto;text-align:center;mso-padding-alt:0;mso-border-alt:10px solid #3d85c6;border-left-width:30px;border-right-width:30px\">RESET PASSWORD</a></span><!--<![endif]--></td>\n" +
+                "</tr>\n" +
+                "<tr>\n" +
+                "<td align=\"center\" class=\"es-m-p0r es-m-p0l\" style=\"Margin:0;padding-top:5px;padding-bottom:5px;padding-left:40px;padding-right:40px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px\">If you did not request this change, please ignore this email, and your password will remain unchanged.</p></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
                 "</table>\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-footer\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%;background-color:transparent;background-repeat:repeat;background-position:center top\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table class=\"es-footer-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:640px\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"Margin:0;padding-top:20px;padding-bottom:20px;padding-left:20px;padding-right:20px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"padding:0;Margin:0;width:600px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" role=\"presentation\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;padding-bottom:35px\"><p style=\"Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:18px;color:#333333;font-size:12px\">This email on LinkedEdge is available for 24 hours. After this period, you'll have to request a new one © 2023 LinkedEdge, Inc. All Rights Reserved.</p></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table>\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" class=\"es-content\" align=\"center\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;table-layout:fixed !important;width:100%\">\n" +
+                "<tr>\n" +
+                "<td class=\"es-info-area\" align=\"center\" style=\"padding:0;Margin:0\">\n" +
+                "<table class=\"es-content-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:transparent;width:600px\" bgcolor=\"#FFFFFF\">\n" +
+                "<tr>\n" +
+                "<td align=\"left\" style=\"padding:20px;Margin:0\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" valign=\"top\" style=\"padding:0;Margin:0;width:560px\">\n" +
+                "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px\">\n" +
+                "<tr>\n" +
+                "<td align=\"center\" style=\"padding:0;Margin:0;display:none\"></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table></td>\n" +
+                "</tr>\n" +
+                "</table>\n" +
+                "</div>\n" +
                 "</body>\n" +
                 "</html>";
     }
