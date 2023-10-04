@@ -7,6 +7,8 @@ import com.parunev.linkededge.model.payload.profile.education.ProfileEducationRe
 import com.parunev.linkededge.model.payload.profile.email.ProfileEmailRequest;
 import com.parunev.linkededge.model.payload.profile.email.ProfileEmailResponse;
 import com.parunev.linkededge.model.payload.profile.experience.ProfileExperienceRequest;
+import com.parunev.linkededge.model.payload.profile.password.ProfileChangePasswordRequest;
+import com.parunev.linkededge.model.payload.profile.password.ProfileChangePasswordResponse;
 import com.parunev.linkededge.model.payload.profile.skill.ProfileSkillRequest;
 import com.parunev.linkededge.service.UserProfileService;
 import com.parunev.linkededge.util.LELogger;
@@ -27,6 +29,13 @@ public class ProfileController {
 
     private final UserProfileService userProfileService;
     private final LELogger leLogger = new LELogger(ProfileController.class);
+
+    @PostMapping("/change-password")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_USER_EXTRA')")
+    public ResponseEntity<ProfileChangePasswordResponse> changeUserPassword(@RequestBody ProfileChangePasswordRequest request){
+        leLogger.info("Request to change user password");
+        return new ResponseEntity<>(userProfileService.changeUserPassword(request), HttpStatus.OK);
+    }
 
     @PostMapping("/change-email")
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_USER_EXTRA')")

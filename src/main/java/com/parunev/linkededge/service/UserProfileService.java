@@ -14,6 +14,8 @@ import com.parunev.linkededge.model.payload.profile.email.ProfileEmailRequest;
 import com.parunev.linkededge.model.payload.profile.email.ProfileEmailResponse;
 import com.parunev.linkededge.model.payload.profile.experience.ExperienceResponse;
 import com.parunev.linkededge.model.payload.profile.experience.ProfileExperienceRequest;
+import com.parunev.linkededge.model.payload.profile.password.ProfileChangePasswordRequest;
+import com.parunev.linkededge.model.payload.profile.password.ProfileChangePasswordResponse;
 import com.parunev.linkededge.model.payload.profile.skill.ProfileSkillRequest;
 import com.parunev.linkededge.model.payload.profile.skill.SkillResponse;
 import com.parunev.linkededge.openai.OpenAi;
@@ -47,6 +49,7 @@ import static com.parunev.linkededge.model.enums.ValidValue.*;
 import static com.parunev.linkededge.openai.OpenAiPrompts.*;
 import static com.parunev.linkededge.util.RequestUtil.getCurrentRequest;
 import static com.parunev.linkededge.util.email.EmailPatterns.changeEmailAddress;
+import static com.parunev.linkededge.util.email.EmailPatterns.changeUserPasswordEmail;
 
 @Service
 @Validated
@@ -67,6 +70,33 @@ public class UserProfileService {
     private final UserProfileUtils upUtils;
     private final EmailSender emailSender;
     private final LELogger leLogger = new LELogger(UserProfileService.class);
+
+    public ProfileChangePasswordResponse changeUserPassword(@Valid ProfileChangePasswordRequest request){
+        User user = upUtils.findUserByContextHolder();
+
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())){
+            leLogger.warn("The provided old password does not match the user one");
+            throw new UserProfileException(buildError("The provided old password does not match your current one", HttpStatus.BAD_REQUEST));
+        }
+
+        if (!Objects.equals(request.getNewPassword(), request.getConfirmNewPassword())){
+            leLogger.warn("Additional validation entered. New passwords does not match");
+            throw new UserProfileException(buildError("The provided passwords does not match", HttpStatus.BAD_REQUEST));
+        }
+
+        leLogger.info("Password validations passed. User password will be changed");
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        emailSender.send(user.getEmail(), changeUserPasswordEmail(user.getUsername()), "LinkedEdge: Change Password (Do not ignore)");
+
+        return ProfileChangePasswordResponse.builder()
+                .path(getCurrentRequest())
+                .message("Your password has been changed! We've sent you an email!")
+                .email(user.getEmail())
+                .status(HttpStatus.OK)
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
 
     public ProfileEmailResponse changeUserEmail(@Valid ProfileEmailRequest request){
         User user = upUtils.findUserByContextHolder();
