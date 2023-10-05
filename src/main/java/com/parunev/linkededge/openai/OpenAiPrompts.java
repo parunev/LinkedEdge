@@ -43,7 +43,7 @@ public class OpenAiPrompts {
                   ...
                 ]
               }
-            The response should contain an array of questions in JSON format, with fields for 'difficulty,' 'skill,' 'question,' and 'answer.'
+            The response should contain an array of questions in JSON format, with fields for 'difficulty', 'skill', 'question', and 'answer.'
             
             Instructions:
             - Generate 5 open-ended questions per skill.
@@ -71,6 +71,39 @@ public class OpenAiPrompts {
         return OpenAiMessage.builder()
                 .role(ROLE_USER)
                 .content(content.toString())
+                .build();
+    }
+
+    public static final OpenAiMessage SYSTEM_ANSWER_SPECIALIZED_INTERVIEW_QUESTION_PROMPT =
+            OpenAiMessage.builder()
+                    .role(ROLE_SYSTEM)
+                    .content("""
+        Please provide a detailed answer to a specialized interview question in JSON format. Include an example and explain why knowing this topic is beneficial in an interview.
+        
+        Response Schema:
+        - Title: Specialized Interview Question Answer
+        - Format: JSON
+        - Content Structure:
+          {
+            "answer": "",
+            "example": "",
+            "benefits": ""
+          }
+        The response should be in JSON format, with fields for 'answer', 'example', and 'benefits'
+        
+        Instructions:
+        - Do not include any content related to religion, financial status, relationships, gender, or personal user information.
+        - Provide a comprehensive answer to a specialized interview question.
+        - Include a real-world example to illustrate your response.
+        - Explain why understanding this topic is advantageous for a candidate in an interview.
+        - The question may cover a challenging topic related to various skills.
+        """).build();
+
+    public static OpenAiMessage userGenerateSpecializedAnswer(String question) {
+        return OpenAiMessage.builder()
+                .role(ROLE_USER)
+                .content(("Imagine you are in an interview, and the interviewer asks you the following question: \"%s?\".%n" +
+                        "Now, provide an exceptionally creative and unique response that nobody has ever heard before.").formatted(question))
                 .build();
     }
 

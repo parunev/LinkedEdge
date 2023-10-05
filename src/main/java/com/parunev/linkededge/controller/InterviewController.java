@@ -1,5 +1,7 @@
 package com.parunev.linkededge.controller;
 
+import com.parunev.linkededge.model.payload.interview.AnswerRequest;
+import com.parunev.linkededge.model.payload.interview.AnswerResponse;
 import com.parunev.linkededge.model.payload.interview.QuestionRequest;
 import com.parunev.linkededge.model.payload.interview.QuestionResponse;
 import com.parunev.linkededge.service.InterviewService;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/edge-api/v1/interview")
@@ -22,9 +23,15 @@ public class InterviewController {
 
     private final InterviewService interviewService;
 
-    @GetMapping
+    @GetMapping("/generate")
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_USER_EXTRA')")
-    public ResponseEntity<List<QuestionResponse>> createInterviewQuestions(@RequestBody QuestionRequest request){
-       return new ResponseEntity<>(interviewService.createInterviewQuestions(request), HttpStatus.OK);
+    public ResponseEntity<List<QuestionResponse>> generateRandomInterviewQuestions(@RequestBody QuestionRequest request){
+       return new ResponseEntity<>(interviewService.generateRandomInterviewQuestions(request), HttpStatus.OK);
+    }
+
+    @GetMapping("/answer-me")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_USER_EXTRA')")
+    public ResponseEntity<AnswerResponse> answerUserQuestion(@RequestBody AnswerRequest request){
+        return new ResponseEntity<>(interviewService.answerUserQuestion(request), HttpStatus.OK);
     }
 }

@@ -3,6 +3,8 @@ package com.parunev.linkededge.service;
 import com.nimbusds.jose.util.Pair;
 import com.parunev.linkededge.model.*;
 import com.parunev.linkededge.model.enums.QuestionDifficulty;
+import com.parunev.linkededge.model.payload.interview.AnswerRequest;
+import com.parunev.linkededge.model.payload.interview.AnswerResponse;
 import com.parunev.linkededge.model.payload.interview.QuestionRequest;
 import com.parunev.linkededge.model.payload.interview.QuestionResponse;
 import com.parunev.linkededge.openai.OpenAi;
@@ -27,8 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.parunev.linkededge.openai.OpenAiPrompts.SYSTEM_INTERVIEW_QUESTION_PROMPT;
-import static com.parunev.linkededge.openai.OpenAiPrompts.userInterviewQuestionsPrompt;
+import static com.parunev.linkededge.openai.OpenAiPrompts.*;
 import static com.parunev.linkededge.util.RequestUtil.getCurrentRequest;
 
 @Service
@@ -42,12 +43,72 @@ public class InterviewService {
     private final SkillRepository skillRepository;
     private final OrganisationRepository organisationRepository;
     private final QuestionRepository questionRepository;
+    private final SpecializedAnswerRepository specializedAnswerRepository;
     private final UserProfileUtils upUtils;
     private final OpenAi openAi;
     private final ModelMapper modelMapper;
     private final LELogger leLogger = new LELogger(InterviewService.class);
 
-    public List<QuestionResponse> createInterviewQuestions(@Valid QuestionRequest request) {
+
+    public AnswerResponse answerUserQuestion(@Valid AnswerRequest request){
+        Pair<User, Profile> pair = upUtils.getUserAndProfile();
+
+        checkForCreditAvailability(pair.getRight().getCredits());
+        pair.getRight().setCredits(pair.getRight().getCredits() - 1);
+
+        AnswerResponse response;
+        try{
+            response = generateAnswerForUserQuestion(request);
+        } catch (JSONException e) {
+            throw new InvalidExtractException(ApiError.builder()
+                    .path(getCurrentRequest())
+                    .error("Either nothing was extract or the operation " +
+                            "was aborted due to inappropriate or unrelated question.")
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .timestamp(LocalDateTime.now())
+                    .build());
+        }
+
+        if (response.getExample().equals("") || response.getBenefits().equals("")){
+            throw new UserProfileException(ApiError.builder()
+                    .path(getCurrentRequest())
+                    .error("Operation was aborted due to inappropriate or unrelated question.")
+                    .status(HttpStatus.BAD_REQUEST)
+                    .timestamp(LocalDateTime.now())
+                    .build());
+        }
+
+        SpecializedAnswer answer = SpecializedAnswer.builder()
+                .profile(pair.getRight())
+                .question(response.getQuestion())
+                .answer(response.getAnswer())
+                .example(response.getExample())
+                .benefits(response.getBenefits())
+                .build();
+
+        profileRepository.save(pair.getRight());
+        specializedAnswerRepository.save(answer);
+
+        return response;
+    }
+
+    private AnswerResponse generateAnswerForUserQuestion(AnswerRequest request) throws JSONException {
+        List<OpenAiMessage> messages = new ArrayList<>();
+        messages.add(SYSTEM_ANSWER_SPECIALIZED_INTERVIEW_QUESTION_PROMPT);
+        messages.add(userGenerateSpecializedAnswer(request.getQuestion()));
+        String answer = openAi.ask(messages);
+
+        JSONObject jsonObject = new JSONObject(answer);
+
+        return AnswerResponse.builder()
+                .question(request.getQuestion())
+                .answer(jsonObject.getString("answer"))
+                .example(jsonObject.getString("example"))
+                .benefits(jsonObject.getString("benefits"))
+                .build();
+    }
+
+    public List<QuestionResponse> generateRandomInterviewQuestions(@Valid QuestionRequest request) {
         Pair<User, Profile> pair = upUtils.getUserAndProfile();
 
         checkForCreditAvailability(pair.getRight().getCredits());

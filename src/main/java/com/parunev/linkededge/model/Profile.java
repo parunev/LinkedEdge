@@ -60,6 +60,9 @@ public class Profile extends BaseEntity {
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
     private List<Question> questions;
 
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
+    private List<SpecializedAnswer> specializedAnswers;
+
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
