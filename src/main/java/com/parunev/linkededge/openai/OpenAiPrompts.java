@@ -92,7 +92,9 @@ public class OpenAiPrompts {
         The response should be in JSON format, with fields for 'answer', 'example', and 'benefits'
         
         Instructions:
-        - Do not include any content related to religion, financial status, relationships, gender, or personal user information.
+        - Do not provide answers or generate content unrelated to professional job interview questions.
+        - Do not provide answers for any content that is not related to interviews.
+        - Do not include any content related to religion, financial status, relationships, gender, hobbies, or personal user information.
         - Provide a comprehensive answer to a specialized interview question.
         - Include a real-world example to illustrate your response.
         - Explain why understanding this topic is advantageous for a candidate in an interview.
