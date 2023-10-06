@@ -10,9 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.jwt.JwtValidationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.ResourceAccessException;
 
@@ -45,6 +47,21 @@ public class DefaultExceptionHandler {
     @ExceptionHandler({HttpStatusCodeException.class, HttpClientErrorException.class})
     public ResponseEntity<String> handleHttpStatusCodeException(HttpStatusCodeException ex){
         return new ResponseEntity<>(ex.getMessage(), ex.getStatusCode());
+    }
+
+    @ExceptionHandler(HttpServerErrorException.class)
+    public ResponseEntity<String> handleHttpServerErrorException(HttpServerErrorException ex){
+        return new ResponseEntity<>(ex.getMessage(), ex.getStatusCode());
+    }
+
+    @ExceptionHandler(JwtValidationException.class)
+    public ResponseEntity<String> handleJwtValidationException(JwtValidationException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AuthorizationNotFoundException.class)
+    public ResponseEntity<ApiError> handleAuthorizationNotFoundException(AuthorizationNotFoundException ex){
+        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
     }
 
     @ExceptionHandler(ResourceAccessException.class)

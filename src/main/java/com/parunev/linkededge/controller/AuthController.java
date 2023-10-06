@@ -6,6 +6,7 @@ import com.parunev.linkededge.model.payload.registration.RegistrationResponse;
 import com.parunev.linkededge.model.payload.registration.ResendTokenRequest;
 import com.parunev.linkededge.service.AuthService;
 import com.parunev.linkededge.util.LELogger;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,5 +74,11 @@ public class AuthController {
             @RequestBody ResetPasswordRequest request) {
         leLogger.info("Reset password request received");
         return new ResponseEntity<>(authService.resetPassword(token, request), HttpStatus.OK);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<LoginResponse> refreshToken(HttpServletRequest request){
+        leLogger.info("Request to reset the access token");
+        return new ResponseEntity<>(authService.refreshToken(request), HttpStatus.OK);
     }
 }

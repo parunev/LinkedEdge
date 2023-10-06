@@ -17,10 +17,12 @@ import com.parunev.linkededge.security.payload.ApiError;
 import com.parunev.linkededge.service.profile.ProfileService;
 import com.parunev.linkededge.util.LELogger;
 import com.parunev.linkededge.util.email.EmailSender;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -331,6 +333,54 @@ public class AuthService {
             throw new UserMfaNotEnabledException(
                     buildError("Multi-factor authentication is not enabled for your account.", HttpStatus.BAD_REQUEST));
         }
+    }
+
+    public LoginResponse refreshToken(HttpServletRequest request) {
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String refreshToken;
+        final String userEmail;
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            leLogger.warn("No authorization token found in the request");
+            throw new AuthorizationNotFoundException(buildError("No authorization token found in the request", HttpStatus.UNAUTHORIZED));
+        }
+
+        refreshToken = authHeader.substring(7);
+        userEmail = jwtService.extractEmail(refreshToken);
+
+        JwtToken token = null;
+        if (userEmail != null) {
+            User user = findUserByEmail(userEmail);
+
+            if (jwtService.isTokenValid(refreshToken, user)) {
+                leLogger.debug("Refreshing token for user: {}", user.getEmail());
+                String accessToken = jwtService.generateToken(user);
+                revokeAndSaveTokens(user);
+                token = JwtToken.builder()
+                        .user(user)
+                        .tokenValue(accessToken)
+                        .tokenType(TokenType.BEARER)
+                        .expired(false)
+                        .revoked(false)
+                        .build();
+                jwtTokenRepository.save(token);
+                leLogger.info("Token refreshed successfully for user: {}", user.getEmail());
+            } else {
+                leLogger.warn("Invalid refresh token for user: {}", user.getEmail());
+            }
+        }
+
+        if (token == null){
+            leLogger.warn("Refresh token was not created.");
+            throw new AuthorizationNotFoundException(buildError("Refresh token was not created. Pleas try again!", HttpStatus.UNAUTHORIZED));
+        }
+
+        return LoginResponse.builder()
+                .path(getCurrentRequest())
+                .accessToken(token.getTokenValue())
+                .status(HttpStatus.CREATED)
+                .timestamp(LocalDateTime.now())
+                .build();
     }
 
     private PasswordToken verifyPasswordToken(String token){
