@@ -1,6 +1,7 @@
 package com.parunev.linkededge.controller;
 
 import com.parunev.linkededge.model.enums.QuestionDifficulty;
+import com.parunev.linkededge.model.payload.interview.AnswerResponse;
 import com.parunev.linkededge.model.payload.interview.QuestionResponse;
 import com.parunev.linkededge.model.payload.profile.*;
 import com.parunev.linkededge.model.payload.profile.education.ProfileEducationRequest;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @RestController
@@ -117,9 +119,21 @@ public class ProfileController {
             Pageable pageable
             ){
         leLogger.info("Request to retrieve all questions or categorized ones with the following parameters:" +
-                "Skill {}; Difficulty: {}, ExperienceId: {}, EducationId: {}");
+                "Skill {}; Difficulty: {}, ExperienceId: {}, EducationId: {}", skill, questionDifficulty, experienceId, educationId);
 
         return new ResponseEntity<>(userProfileService.searchQuestions(skill, questionDifficulty, experienceId, educationId, pageable), HttpStatus.OK);
     }
 
+    @GetMapping("/answers")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_USER_EXTRA')")
+    public ResponseEntity<Page<AnswerResponse>> getAllAnswers(
+            @RequestParam(required = false, defaultValue = "") LocalDate fromDate,
+            @RequestParam(required = false, defaultValue = "") LocalDate toDate,
+            @RequestParam(required = false, defaultValue = "") String input,
+            Pageable pageable){
+        leLogger.info("Request to retrieve all the answers or categorized ones with the following parameters:" +
+                "fromDate: {}, toDate: {}, input: {}",fromDate, toDate, input);
+
+        return new ResponseEntity<>(userProfileService.searchAnswers(fromDate, toDate, input, pageable), HttpStatus.OK);
+    }
 }

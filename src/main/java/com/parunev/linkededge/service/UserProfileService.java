@@ -5,6 +5,7 @@ import com.parunev.linkededge.model.*;
 import com.parunev.linkededge.model.enums.QuestionDifficulty;
 import com.parunev.linkededge.model.enums.TokenType;
 import com.parunev.linkededge.model.enums.ValidValue;
+import com.parunev.linkededge.model.payload.interview.AnswerResponse;
 import com.parunev.linkededge.model.payload.interview.QuestionResponse;
 import com.parunev.linkededge.model.payload.profile.ProfileMfaRequest;
 import com.parunev.linkededge.model.payload.profile.ProfileResponse;
@@ -42,6 +43,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -385,22 +387,31 @@ public class UserProfileService {
                 difficulty,
                 experienceId,
                 educationId,
+                pair.getRight().getId(),
                 pageable
         );
 
-        List<Question> filteredQuestions = questionPage
-                .getContent()
+        return new PageImpl<>(questionPage
                 .stream()
-                .filter(question -> question.getProfile().equals(pair.getRight()))
-                .toList();
-        leLogger.info("{} questions found for the specified user and profile.", filteredQuestions.size());
+                .map(this::map)
+                .toList(), pageable, questionPage.getSize());
+    }
 
-        if (filteredQuestions.isEmpty()){
-            throw new QuestionNotFoundException(buildError("No questions matching your criteria were found.", HttpStatus.NOT_FOUND));
-        }
+    public Page<AnswerResponse> searchAnswers(LocalDate fromDate, LocalDate toDate, String input, Pageable pageable){
+        Pair<User,Profile> pair = upUtils.getUserAndProfile();
 
-        return new PageImpl<>(filteredQuestions
-                .stream().map(this::map).toList(), pageable, filteredQuestions.size());
+        Page<SpecializedAnswer> answersPage = questionRepository.findAllAnswers(
+                fromDate,
+                toDate,
+                input,
+                pair.getRight().getId(),
+                pageable
+        );
+
+        return new PageImpl<>(answersPage
+                .stream()
+                .map(answer -> modelMapper.map(answer, AnswerResponse.class))
+                .toList(), pageable, answersPage.getSize());
     }
 
     private QuestionResponse map(Question question){
