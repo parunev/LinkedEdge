@@ -1,4 +1,4 @@
-package com.parunev.linkededge.service.profile;
+package com.parunev.linkededge.service.extraction;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

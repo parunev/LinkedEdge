@@ -14,7 +14,7 @@ import com.parunev.linkededge.security.jwt.JwtService;
 import com.parunev.linkededge.security.mfa.Email2FA;
 import com.parunev.linkededge.security.mfa.Google2FA;
 import com.parunev.linkededge.security.payload.ApiError;
-import com.parunev.linkededge.service.profile.ExtractionService;
+import com.parunev.linkededge.service.extraction.ExtractionService;
 import com.parunev.linkededge.util.LELogger;
 import com.parunev.linkededge.util.email.EmailSender;
 import jakarta.servlet.http.HttpServletRequest;

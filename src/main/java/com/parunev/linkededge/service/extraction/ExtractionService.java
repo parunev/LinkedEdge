@@ -1,4 +1,4 @@
-package com.parunev.linkededge.service.profile;
+package com.parunev.linkededge.service.extraction;
 
 import com.nimbusds.jose.util.Pair;
 import com.parunev.linkededge.model.*;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.parunev.linkededge.service.profile.ExtractionConstants.*;
+import static com.parunev.linkededge.service.extraction.ExtractionConstants.*;
 import static com.parunev.linkededge.util.RequestUtil.getCurrentRequest;
 
 @Service
