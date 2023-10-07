@@ -14,7 +14,7 @@ import com.parunev.linkededge.security.jwt.JwtService;
 import com.parunev.linkededge.security.mfa.Email2FA;
 import com.parunev.linkededge.security.mfa.Google2FA;
 import com.parunev.linkededge.security.payload.ApiError;
-import com.parunev.linkededge.service.profile.ProfileService;
+import com.parunev.linkededge.service.profile.ExtractionService;
 import com.parunev.linkededge.util.LELogger;
 import com.parunev.linkededge.util.email.EmailSender;
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,7 +52,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final ProfileService profileService;
+    private final ExtractionService extractionService;
     private final Google2FA google2FA;
     private final Email2FA email2FA;
     private final EmailSender emailSender;
@@ -163,7 +163,7 @@ public class AuthService {
 
 
         try {
-            profileService.createProfile(confirmationToken.getUser());
+            extractionService.createProfile(confirmationToken.getUser());
             leLogger.info("User profile saved to database: {}", confirmationToken.getUser().getUsername());
         } catch (JSONException | HttpStatusCodeException e){
             leLogger.error("Something went wrong with the profile creation {} [}", e, e.getMessage());

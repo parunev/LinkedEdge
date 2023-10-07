@@ -22,13 +22,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.parunev.linkededge.service.profile.ProfileConstants.*;
+import static com.parunev.linkededge.service.profile.ExtractionConstants.*;
 import static com.parunev.linkededge.util.RequestUtil.getCurrentRequest;
 
 @Service
 @Validated
 @RequiredArgsConstructor
-public class ProfileService {
+public class ExtractionService {
 
     @Value("${lix.authorization.key}")
     private String lixKey;
@@ -38,7 +38,7 @@ public class ProfileService {
     private final OrganisationRepository organisationRepository;
     private final EducationRepository educationRepository;
     private final SkillRepository skillRepository;
-    private final LELogger leLogger = new LELogger(ProfileService.class);
+    private final LELogger leLogger = new LELogger(ExtractionService.class);
 
     public void createProfile(User user) throws JSONException {
         leLogger.info("Attempt to create user profile");

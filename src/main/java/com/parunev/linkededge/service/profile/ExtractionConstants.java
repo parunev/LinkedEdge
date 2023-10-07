@@ -5,9 +5,10 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ProfileConstants {
+public enum ExtractionConstants {
 
     PROFILE_RETRIEVAL_URL("https://api.lix-it.com/v1/person?profile_link="),
+    JOB_RETRIEVAL_URL("https://api.lix-it.com/v1/enrich/job?job_id="),
     NOT_PRESENT("DATA NOT PRESENT"),
     NAME("name"),
     LOCATION("location"),
