@@ -1,6 +1,7 @@
 package com.parunev.linkededge.model;
 
 import com.parunev.linkededge.model.commons.BaseEntity;
+import com.parunev.linkededge.model.job.Job;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -62,6 +63,9 @@ public class Profile extends BaseEntity {
 
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
     private List<SpecializedAnswer> specializedAnswers;
+
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
+    private List<Job> jobs;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
