@@ -3,15 +3,18 @@ package com.parunev.linkededge.service;
 import com.nimbusds.jose.util.Pair;
 import com.parunev.linkededge.model.*;
 import com.parunev.linkededge.model.enums.QuestionDifficulty;
+import com.parunev.linkededge.model.job.Job;
 import com.parunev.linkededge.model.payload.interview.AnswerRequest;
 import com.parunev.linkededge.model.payload.interview.AnswerResponse;
 import com.parunev.linkededge.model.payload.interview.QuestionRequest;
 import com.parunev.linkededge.model.payload.interview.QuestionResponse;
+import com.parunev.linkededge.model.payload.profile.JobRequest;
 import com.parunev.linkededge.openai.OpenAi;
 import com.parunev.linkededge.openai.model.OpenAiMessage;
 import com.parunev.linkededge.repository.*;
 import com.parunev.linkededge.security.exceptions.*;
 import com.parunev.linkededge.security.payload.ApiError;
+import com.parunev.linkededge.service.extraction.ExtractionService;
 import com.parunev.linkededge.util.LELogger;
 import com.parunev.linkededge.util.UserProfileUtils;
 import jakarta.validation.Valid;
@@ -28,6 +31,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.parunev.linkededge.openai.OpenAiPrompts.*;
 import static com.parunev.linkededge.util.RequestUtil.getCurrentRequest;
@@ -47,7 +52,29 @@ public class InterviewService {
     private final UserProfileUtils upUtils;
     private final OpenAi openAi;
     private final ModelMapper modelMapper;
+    private final ExtractionService extractionService;
     private final LELogger leLogger = new LELogger(InterviewService.class);
+
+    public String prepareMeForAJob(JobRequest request){
+        Pair<User, Profile> pair = upUtils.getUserAndProfile();
+
+        leLogger.info("Trying to find a job id if any");
+        String jobId = extractJobIdIfAny(request.getJobLink());
+
+        leLogger.info("Checking for available job credits");
+        checkForCreditAvailability(pair.getRight().getJobCredits());
+
+        leLogger.info("Job extraction");
+        Job job = extractionService.createJob(pair.getRight(), jobId);
+
+        // TODO: Prompts
+
+        // TODO: Ask gpt
+
+        // TODO: Response
+
+        return job.getJobDescription();
+    }
 
 
     public AnswerResponse answerUserQuestion(@Valid AnswerRequest request){
@@ -92,22 +119,6 @@ public class InterviewService {
         return response;
     }
 
-    private AnswerResponse generateAnswerForUserQuestion(AnswerRequest request) throws JSONException {
-        List<OpenAiMessage> messages = new ArrayList<>();
-        messages.add(SYSTEM_ANSWER_SPECIALIZED_INTERVIEW_QUESTION_PROMPT);
-        messages.add(userGenerateSpecializedAnswer(request.getQuestion()));
-        String answer = openAi.ask(messages);
-
-        JSONObject jsonObject = new JSONObject(answer);
-
-        return AnswerResponse.builder()
-                .question(request.getQuestion())
-                .answer(jsonObject.getString("answer"))
-                .example(jsonObject.getString("example"))
-                .benefits(jsonObject.getString("benefits"))
-                .build();
-    }
-
     public List<QuestionResponse> generateRandomInterviewQuestions(@Valid QuestionRequest request) {
         Pair<User, Profile> pair = upUtils.getUserAndProfile();
 
@@ -121,7 +132,7 @@ public class InterviewService {
         List<Question> questions;
 
         try{
-             questions = generateInterviewQuestions(pair.getRight(), education, experience, skills, difficulty);
+            questions = generateInterviewQuestions(pair.getRight(), education, experience, skills, difficulty);
         } catch (Exception e){
             leLogger.error(e.getMessage() + "Exception: {} Cause: {}",e, e.getCause());
             throw new InvalidWritingException(ApiError.builder()
@@ -139,6 +150,22 @@ public class InterviewService {
         return questions.stream()
                 .map(question -> modelMapper.map(question, QuestionResponse.class))
                 .toList();
+    }
+
+    private AnswerResponse generateAnswerForUserQuestion(AnswerRequest request) throws JSONException {
+        List<OpenAiMessage> messages = new ArrayList<>();
+        messages.add(SYSTEM_ANSWER_SPECIALIZED_INTERVIEW_QUESTION_PROMPT);
+        messages.add(userGenerateSpecializedAnswer(request.getQuestion()));
+        String answer = openAi.ask(messages);
+
+        JSONObject jsonObject = new JSONObject(answer);
+
+        return AnswerResponse.builder()
+                .question(request.getQuestion())
+                .answer(jsonObject.getString("answer"))
+                .example(jsonObject.getString("example"))
+                .benefits(jsonObject.getString("benefits"))
+                .build();
     }
 
     private List<Question> generateInterviewQuestions(Profile profile, Education education, Experience experience, List<Skill> skills, QuestionDifficulty difficulty) throws JSONException {
@@ -160,6 +187,31 @@ public class InterviewService {
         String questions = openAi.ask(messages);
         leLogger.info("Questions are ready to be sent to the end-client");
         return returnQuestionsAfterProcessing(profile, education, experience, skills, questions);
+    }
+
+    private String extractJobIdIfAny(String jobLink) {
+        Pattern currentJobIdPattern = Pattern.compile("currentJobId=(\\d+)");
+        Pattern sharedJobIdPattern = Pattern.compile("/view/(\\d+)");
+
+        Matcher matcher = currentJobIdPattern.matcher(jobLink);
+        if (matcher.find()){
+            leLogger.info("Found currentJobId={}", matcher.group(1));
+            return matcher.group(1);
+        } else {
+            matcher = sharedJobIdPattern.matcher(jobLink);
+            if (matcher.find()){
+                leLogger.info("JobId presented in the link:{}", matcher.group(1));
+                return matcher.group(1);
+            } else {
+                leLogger.warn("JobId not found in the provided job link: {}", jobLink);
+                throw new InvalidExtractException(ApiError.builder()
+                        .path(getCurrentRequest())
+                        .error("Job ID not found in the provided job link: " + jobLink)
+                        .status(HttpStatus.NOT_FOUND)
+                        .timestamp(LocalDateTime.now())
+                        .build());
+            }
+        }
     }
 
     private List<Question> returnQuestionsAfterProcessing(Profile profile, Education education,

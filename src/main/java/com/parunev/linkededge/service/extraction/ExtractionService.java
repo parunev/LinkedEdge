@@ -1,7 +1,11 @@
 package com.parunev.linkededge.service.extraction;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.util.Pair;
 import com.parunev.linkededge.model.*;
+import com.parunev.linkededge.model.job.*;
 import com.parunev.linkededge.repository.*;
 import com.parunev.linkededge.security.exceptions.InvalidExtractException;
 import com.parunev.linkededge.security.payload.ApiError;
@@ -34,28 +38,184 @@ public class ExtractionService {
     private String lixKey;
     private final RestTemplate restTemplate;
     private final ProfileRepository profileRepository;
+
+    // PROFILE RELATED
     private final ExperienceRepository experienceRepository;
     private final OrganisationRepository organisationRepository;
     private final EducationRepository educationRepository;
     private final SkillRepository skillRepository;
+
+    // JOB RELATED
+    private final CompanyIndustryRepository companyIndustryRepository;
+    private final CompanyResolutionRepository companyResolutionRepository;
+    private final CompanySpecialtyRepository companySpecialtyRepository;
+    private final JobRepository jobRepository;
+    private final JobFunctionRepository jobFunctionRepository;
+    private final JobIndustryRepository jobIndustryRepository;
+
     private final LELogger leLogger = new LELogger(ExtractionService.class);
+
+    public Job createJob(Profile profile, String jobId) {
+        leLogger.info("Attempt to create a job object for jobId: {}", jobId);
+        Pair<HttpStatusCode, String> response = collectedData(jobId, JOB_RETRIEVAL_URL.getValue());
+
+        Job job = null;
+        if (response.getLeft().is2xxSuccessful()) {
+            try {
+                job = proceedWithJobCreation(response.getRight(), profile);
+            } catch (Exception e) {
+                leLogger.error("Error while creating a job object: {} {}", e, e.getMessage());
+                throw throwException(HttpStatus.BAD_REQUEST, e.getMessage());
+           }
+        }
+
+        leLogger.info("Attempt successful, returning job");
+        return job;
+    }
+
+    private Job proceedWithJobCreation(String jsonResponse, Profile profile) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(jsonResponse)
+                .path("jobPosting");
+
+        Job job = Job.builder()
+                .profile(profile)
+                .jobDescription(rootNode.path(DESCRIPTION.getValue()).get("text") != null ? rootNode.path(DESCRIPTION.getValue()).get("text").asText() : NOT_PRESENT.getValue())
+                .employmentStatus(rootNode.path("employmentStatusResolutionResult").get("localizedName")!= null ?
+                        rootNode.path("employmentStatusResolutionResult").get("localizedName").asText() : NOT_PRESENT.getValue())
+                .jobTitle(rootNode.get("title") != null ? rootNode.get("title").asText() : NOT_PRESENT.getValue())
+                .location(rootNode.get("formattedLocation") != null ? rootNode.get("formattedLocation").asText() : NOT_PRESENT.getValue())
+                .jobPostingUrl(rootNode.get("jobPostingUrl") != null ? rootNode.get("jobPostingUrl").asText() : NOT_PRESENT.getValue())
+                .jobPostingId(rootNode.get("jobPostingId") != null ? rootNode.get("jobPostingId").asText() : NOT_PRESENT.getValue())
+                .build();
+        jobRepository.save(job);
+        leLogger.debug("Job created and saved successfully");
+
+        List<JobFunction> functions = extractAndSaveFunctions(job, rootNode.path("formattedJobFunctions"));
+        List<JobIndustry> industries = extractAndSaveIndustries(job, rootNode.path("formattedIndustries"));
+        createCompanyResolution(rootNode, job);
+
+        if (!functions.isEmpty()){
+            job.setFunctions(functions);
+        }
+
+        if (!industries.isEmpty()){
+            job.setIndustries(industries);
+        }
+
+        jobRepository.save(job);
+
+        return job;
+    }
+
+    private List<JobIndustry> extractAndSaveIndustries(Job job, JsonNode rootNode) {
+        List<JobIndustry> toReturn = new ArrayList<>();
+        if (rootNode.isArray()){
+            for (JsonNode industry : rootNode){
+                JobIndustry jobIndustry = JobIndustry.builder()
+                        .job(job)
+                        .jobIndustryName(industry.asText())
+                        .build();
+                jobIndustryRepository.save(jobIndustry);
+                toReturn.add(jobIndustry);
+            }
+        }
+        leLogger.info("Extracted and saved {} industries for job {}", toReturn.size(), job.getId());
+        return toReturn;
+    }
+
+    private List<JobFunction> extractAndSaveFunctions(Job job, JsonNode rootNode) {
+        List<JobFunction> toReturn = new ArrayList<>();
+        if (rootNode.isArray()){
+            for (JsonNode function : rootNode){
+                JobFunction jobFunction = JobFunction.builder()
+                        .job(job)
+                        .jobFunctionName(function.asText())
+                        .build();
+                jobFunctionRepository.save(jobFunction);
+                toReturn.add(jobFunction);
+            }
+        }
+        leLogger.info("Extracted and saved {} functions for job {}", toReturn.size(), job.getId());
+        return toReturn;
+    }
+
+    private void createCompanyResolution(JsonNode rootNode, Job job) {
+        JsonNode companyResolutionResultNode = rootNode
+                .path("companyDetails")
+                .path("com.linkedin.voyager.deco.jobs.web.shared.WebJobPostingCompany")
+                .path("companyResolutionResult");
+
+        String headquarters = createHeadquarters(companyResolutionResultNode.path("headquarter"));
+
+        CompanyResolution companyResolution = CompanyResolution.builder()
+                .job(job)
+                .companyUniversalName(companyResolutionResultNode.get("universalName") != null ? companyResolutionResultNode.get("universalName").asText() : NOT_PRESENT.getValue())
+                .companyName(companyResolutionResultNode.get(NAME.getValue())!= null ? companyResolutionResultNode.get(NAME.getValue()).asText() : NOT_PRESENT.getValue())
+                .companyUrl(companyResolutionResultNode.get("url")!= null ? companyResolutionResultNode.get("url").asText() : NOT_PRESENT.getValue())
+                .companyDescription(companyResolutionResultNode.get(DESCRIPTION.getValue())!= null ? companyResolutionResultNode.get(DESCRIPTION.getValue()).asText() : NOT_PRESENT.getValue())
+                .companyStaffCount(companyResolutionResultNode.get("staffCount")!= null ? companyResolutionResultNode.get("staffCount").asInt() : 0)
+                .companyHeadquarter(headquarters)
+                .build();
+        companyResolutionRepository.save(companyResolution);
+
+        extractCompanySpecialties(companyResolution, companyResolutionResultNode.path("specialities"));
+        extractCompanyIndustries(companyResolution, companyResolutionResultNode.path("industries"));
+        leLogger.info("Created and saved company resolutions for job {}", job.getId());
+    }
+
+    private void extractCompanyIndustries(CompanyResolution companyResolution, JsonNode industries) {
+        if (industries.isArray()){
+            for (JsonNode industry : industries){
+                CompanyIndustry companyIndustry = CompanyIndustry.builder()
+                        .companyResolution(companyResolution)
+                        .industryName(industry.asText())
+                        .build();
+                companyIndustryRepository.save(companyIndustry);
+            }
+        }
+        leLogger.info("Extracted and saved {} industries for company resolution {}", industries.size(), companyResolution.getId());
+    }
+
+    private void extractCompanySpecialties(CompanyResolution companyResolution, JsonNode specialities) {
+        if (specialities.isArray()){
+            for (JsonNode specialty : specialities){
+                CompanySpecialty companySpecialty = CompanySpecialty.builder()
+                        .companyResolution(companyResolution)
+                        .specialtyName(specialty.asText())
+                        .build();
+                companySpecialtyRepository.save(companySpecialty);
+            }
+        }
+        leLogger.info("Extracted and saved {} specialties for company resolution {}", specialities.size(), companyResolution.getId());
+    }
+
+    private String createHeadquarters(JsonNode node) {
+        String headquarter = "Country: %s, ".formatted(node.get("country") != null ? node.get("country").asText() : NOT_PRESENT.getValue()) +
+                "City: %s, ".formatted(node.get("city")!= null ? node.get("city").asText() : NOT_PRESENT.getValue()) +
+                "Postal code: %s".formatted(node.get("postalCode")!= null ? node.get("postalCode").asText() : NOT_PRESENT.getValue());
+
+        leLogger.debug("Created headquarters: {}", headquarter);
+        return headquarter;
+    }
+
 
     public void createProfile(User user) throws JSONException {
         leLogger.info("Attempt to create user profile");
-        Pair<HttpStatusCode, String> response = collectedData(user.getLinkedInProfile());
+        Pair<HttpStatusCode, String> response = collectedData(user.getLinkedInProfile(), PROFILE_RETRIEVAL_URL.getValue());
         JSONObject jsonObject = new JSONObject(response.getRight());
 
         if (response.getLeft().is2xxSuccessful()) {
             try {
-                proceedWithCreation(jsonObject, user);
+                proceedWithProfileCreation(jsonObject, user);
             } catch (Exception e) {
                 throw throwException(response.getLeft(), e.getMessage());
             }
         }
     }
 
-    private void proceedWithCreation(JSONObject obj, User user) throws JSONException {
-        leLogger.info("Starting extraction of information.");
+    private void proceedWithProfileCreation(JSONObject obj, User user) throws JSONException {
+        leLogger.info("Starting extraction of profile information.");
         Profile profile = Profile.builder()
                 .user(user)
                 .credits(3)
@@ -168,7 +328,7 @@ public class ExtractionService {
         return educationList;
     }
 
-    private Pair<HttpStatusCode, String> collectedData(String account){
+    private Pair<HttpStatusCode, String> collectedData(String link, String endpoint){
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", lixKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -177,22 +337,22 @@ public class ExtractionService {
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(
-                    PROFILE_RETRIEVAL_URL.getValue() + account,
+                    endpoint + link,
                     HttpMethod.GET,
                     entity,
                     String.class
             );
 
-            leLogger.info("Profile retrieval successful for account: {}", account);
+            leLogger.info("Profile retrieval successful for link: {}", link);
             return Pair.of(response.getStatusCode(), response.getBody());
 
         } catch (HttpStatusCodeException ex) {
-            leLogger.error("Profile retrieval failed, exception: {}. Email: {}. Status code: {}, Response body: {}",
-                    ex, account, ex.getStatusCode(), ex.getResponseBodyAsString());
+            leLogger.error("Profile retrieval failed, exception: {}. Profile: {}. Status code: {}, Response body: {}",
+                    ex, link, ex.getStatusCode(), ex.getResponseBodyAsString());
             return Pair.of(ex.getStatusCode(), ex.getResponseBodyAsString());
 
         } catch (Exception e) {
-            leLogger.error("An error occurred while retrieving profile exception: {}. Email: {}.", e , account);
+            leLogger.error("An error occurred while retrieving profile exception: {}. Profile link: {}.", e , link);
             return Pair.of(HttpStatusCode.valueOf(500), "An error occurred on the server." +
                     " Should this error persist, please contact our technical team.");
         }

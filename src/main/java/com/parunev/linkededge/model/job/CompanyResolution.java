@@ -6,7 +6,8 @@ import lombok.*;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,6 +15,9 @@ import java.util.List;
 @Entity(name = "EDGE_COMPANY_RESOLUTION")
 @AttributeOverride(name = "id", column = @Column(name = "COMPANY_RESOLUTION_ID"))
 public class CompanyResolution extends BaseEntity {
+
+    @Column(name = "COMPANY_UNIVERSAL_NAME")
+    private String companyUniversalName;
 
     @Column(name = "COMPANY_NAME")
     private String companyName;

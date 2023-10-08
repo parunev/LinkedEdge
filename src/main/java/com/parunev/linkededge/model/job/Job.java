@@ -31,8 +31,8 @@ public class Job extends BaseEntity {
     @Column(name = "JOB_POSTING_URL")
     private String jobPostingUrl;
 
-    @Column(name = "WORKPLACE_TYPE")
-    private String workplaceType;
+    @Column(name = "JOB_POSTING_ID")
+    private String jobPostingId;
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL)
     private List<JobFunction> functions;

@@ -7,7 +7,8 @@ import lombok.*;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,6 +19,9 @@ public class Profile extends BaseEntity {
 
     @Column(name = "CREDITS")
     private Integer credits;
+
+    @Column(name = "JOB_CREDITS")
+    private Integer jobCredits;
 
     @Column(name = "EDUCATION_EXTRA_CAPACITY")
     private Integer educationExtraCapacity;
