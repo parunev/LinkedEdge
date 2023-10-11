@@ -22,9 +22,7 @@ import com.parunev.linkededge.model.payload.profile.skill.SkillResponse;
 import com.parunev.linkededge.openai.OpenAi;
 import com.parunev.linkededge.openai.model.OpenAiMessage;
 import com.parunev.linkededge.repository.*;
-import com.parunev.linkededge.security.exceptions.InsufficientCapacityException;
-import com.parunev.linkededge.security.exceptions.QuestionNotFoundException;
-import com.parunev.linkededge.security.exceptions.RegistrationFailedException;
+import com.parunev.linkededge.security.exceptions.ResourceNotFoundException;
 import com.parunev.linkededge.security.exceptions.UserProfileException;
 import com.parunev.linkededge.security.payload.ApiError;
 import com.parunev.linkededge.util.LELogger;
@@ -159,7 +157,7 @@ public class UserProfileService {
         ConfirmationToken confirmationToken = confirmationTokenRepository.findByTokenValue(token)
                 .orElseThrow(() -> {
                     leLogger.warn("Token not found");
-                    throw new RegistrationFailedException(
+                    throw new UserProfileException(
                             buildError("Token not found. Please ensure you have the correct token or request a new one.", HttpStatus.NOT_FOUND)
                     );
                 });
@@ -371,11 +369,11 @@ public class UserProfileService {
                 return modelMapper.map(question, QuestionResponse.class);
             } else {
                 leLogger.warn("Question with ID:{} does not belong to the specified user and profile.", questionId);
-                throw new QuestionNotFoundException(buildError("This questions does not belong to your profile", HttpStatus.BAD_REQUEST));
+                throw new ResourceNotFoundException(buildError("This questions does not belong to your profile", HttpStatus.BAD_REQUEST));
             }
         } else {
             leLogger.warn("Question with ID:{} not found.", questionId);
-            throw new QuestionNotFoundException(buildError("Question not present in the database", HttpStatus.NOT_FOUND));
+            throw new ResourceNotFoundException(buildError("Question not present in the database", HttpStatus.NOT_FOUND));
         }
     }
 
@@ -463,7 +461,7 @@ public class UserProfileService {
 
     private void checkForCreditsCapacity(Integer capacity) {
         if (capacity == 0){
-            throw new InsufficientCapacityException(buildError(
+            throw new ResourceNotFoundException(buildError(
                     "Sorry, not enough extra capacity for experiences. Consider buying more credits for your profile!",
                     HttpStatus.BAD_REQUEST
             ));
@@ -505,13 +503,13 @@ public class UserProfileService {
     private void isValidToken(ConfirmationToken confirmationToken) {
         if (confirmationToken.getConfirmed() != null) {
             leLogger.warn("Token already confirmed: {}", confirmationToken.getParameters());
-            throw new RegistrationFailedException(
+            throw new UserProfileException(
                     buildError("The provided token has already been confirmed", HttpStatus.BAD_REQUEST));
         }
 
         if (confirmationToken.getExpires().isBefore(LocalDateTime.now())) {
             leLogger.warn("Token has expired: {}", confirmationToken.getParameters());
-            throw new RegistrationFailedException(
+            throw new UserProfileException(
                     buildError("The provided token has expired. Please request a new one", HttpStatus.BAD_REQUEST)
             );
         }

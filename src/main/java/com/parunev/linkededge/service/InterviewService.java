@@ -3,12 +3,9 @@ package com.parunev.linkededge.service;
 import com.nimbusds.jose.util.Pair;
 import com.parunev.linkededge.model.*;
 import com.parunev.linkededge.model.enums.QuestionDifficulty;
+import com.parunev.linkededge.model.job.CompanyResolution;
 import com.parunev.linkededge.model.job.Job;
-import com.parunev.linkededge.model.payload.interview.AnswerRequest;
-import com.parunev.linkededge.model.payload.interview.AnswerResponse;
-import com.parunev.linkededge.model.payload.interview.QuestionRequest;
-import com.parunev.linkededge.model.payload.interview.QuestionResponse;
-import com.parunev.linkededge.model.payload.profile.JobRequest;
+import com.parunev.linkededge.model.payload.interview.*;
 import com.parunev.linkededge.openai.OpenAi;
 import com.parunev.linkededge.openai.model.OpenAiMessage;
 import com.parunev.linkededge.repository.*;
@@ -34,6 +31,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.parunev.linkededge.openai.OpenAiJobPrompt.SYSTEM_PREPARE_AND_COACH_FOR_INTERVIEW;
+import static com.parunev.linkededge.openai.OpenAiJobPrompt.userPrepareAndCoachForInterview;
 import static com.parunev.linkededge.openai.OpenAiPrompts.*;
 import static com.parunev.linkededge.util.RequestUtil.getCurrentRequest;
 
@@ -49,13 +48,17 @@ public class InterviewService {
     private final OrganisationRepository organisationRepository;
     private final QuestionRepository questionRepository;
     private final SpecializedAnswerRepository specializedAnswerRepository;
+    private final CompanyResolutionRepository companyResolutionRepository;
+    private final CoachingRepository coachingRepository;
+    private final PreparationRepository preparationRepository;
+    private final InterviewPreparationRepository interviewPreparationRepository;
     private final UserProfileUtils upUtils;
     private final OpenAi openAi;
     private final ModelMapper modelMapper;
     private final ExtractionService extractionService;
     private final LELogger leLogger = new LELogger(InterviewService.class);
 
-    public String prepareMeForAJob(JobRequest request){
+    public JobResponse prepareMeForAJob(JobRequest request){
         Pair<User, Profile> pair = upUtils.getUserAndProfile();
 
         leLogger.info("Trying to find a job id if any");
@@ -67,13 +70,83 @@ public class InterviewService {
         leLogger.info("Job extraction");
         Job job = extractionService.createJob(pair.getRight(), jobId);
 
-        // TODO: Prompts
+        CompanyResolution companyResolution = companyResolutionRepository.findByJobId(job.getId())
+                .orElseThrow(() -> {
+                    leLogger.warn("No such company resolution found");
+                    throw new InvalidExtractException(ApiError.builder()
+                            .path(getCurrentRequest())
+                            .error("No such Company Resolution find in the database")
+                            .timestamp(LocalDateTime.now())
+                            .status(HttpStatus.NOT_FOUND)
+                            .build());
+                });
 
-        // TODO: Ask gpt
+        List<OpenAiMessage> messages = new ArrayList<>();
+        messages.add(SYSTEM_PREPARE_AND_COACH_FOR_INTERVIEW);
+        messages.add(userPrepareAndCoachForInterview(companyResolution.getCompanyName(), companyResolution.getCompanyStaffCount()
+        ,companyResolution.getSpecialties(), companyResolutionRepository.findAllByJobId(job.getId()), job.getJobDescription(),
+                job.getEmploymentStatus(),job.getJobTitle(), job.getFunctions(), job.getIndustries(), pair.getRight().getDescription(),
+                pair.getRight().getOrganisation(),pair.getRight().getEducation(), pair.getRight().getExperience(), pair.getRight().getSkill()));
 
-        // TODO: Response
+        String answer = openAi.ask(messages);
+        Pair<List<Coaching>, Preparation> interviewPreparation;
+        try {
+            interviewPreparation = buildInterviewPreparation(answer, job, pair.getRight());
+        } catch (JSONException e){
+            throw new InvalidExtractException(ApiError.builder()
+                    .path(getCurrentRequest())
+                    .error("Either nothing was extract or the operation " +
+                            "was aborted due to inappropriate or unrelated information.")
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .timestamp(LocalDateTime.now())
+                    .build());
+        }
 
-        return job.getJobDescription();
+        return JobResponse.builder()
+                .coaching(interviewPreparation
+                        .getLeft()
+                        .stream()
+                        .map(coaching -> modelMapper.map(coaching, CoachingResponse.class))
+                        .toList())
+                .preparationResponse(modelMapper.map(interviewPreparation.getRight(),PreparationResponse.class))
+                .build();
+    }
+
+    private Pair<List<Coaching>, Preparation> buildInterviewPreparation(String answer, Job job, Profile profile) throws JSONException {
+        JSONObject jsonObject = new JSONObject(answer);
+
+        JSONArray coachingArray = jsonObject.getJSONArray("coaching");
+        JSONArray preparationArray = jsonObject.getJSONArray("preparation");
+
+        InterviewPreparation interviewPreparation = InterviewPreparation.builder()
+                .job(job)
+                .profile(profile)
+                .build();
+        interviewPreparationRepository.save(interviewPreparation);
+
+        List<Coaching> coachingList = new ArrayList<>();
+        for (int i = 0; i < coachingArray.length() ; i++) {
+            JSONObject coachingObject = coachingArray.getJSONObject(i);
+
+            Coaching coaching = Coaching.builder()
+                    .difficulty(QuestionDifficulty.valueOf(coachingObject.getString("difficulty")))
+                    .question(coachingObject.getString("question"))
+                    .insight(coachingObject.getString("insight"))
+                    .answer(coachingObject.getString("advice"))
+                    .interview(interviewPreparation)
+                    .build();
+            coachingRepository.save(coaching);
+            coachingList.add(coaching);
+        }
+
+        Preparation preparation = Preparation.builder()
+                .doYouFit(preparationArray.getJSONObject(0).getString("doYouFit"))
+                .doYouNotFit(preparationArray.getJSONObject(0).getString("doYouNotFit"))
+                .interview(interviewPreparation)
+                .build();
+        preparationRepository.save(preparation);
+
+        return Pair.of(coachingList, preparation);
     }
 
 
@@ -326,7 +399,7 @@ public class InterviewService {
     private void checkForCreditAvailability(Integer credits) {
         if (credits == 0){
             leLogger.warn("Insufficient credits.");
-            throw new InsufficientCapacityException(ApiError.builder()
+            throw new ResourceNotFoundException(ApiError.builder()
                     .path(getCurrentRequest())
                     .error("Insufficient credits. Consider buying more credits for your profile!")
                     .status(HttpStatus.BAD_REQUEST)
@@ -338,7 +411,7 @@ public class InterviewService {
     private List<Skill> isTheSkillsExistingOnes(List<UUID> skills) {
         if (skills.size() != skillRepository.findAllById(skills).size()){
             leLogger.warn("One or more skills not found.");
-            throw new SkillNotFoundException(ApiError.builder()
+            throw new ResourceNotFoundException(ApiError.builder()
                     .path(getCurrentRequest())
                     .error("One or more skills not found.")
                     .status(HttpStatus.NOT_FOUND)
@@ -353,7 +426,7 @@ public class InterviewService {
         return experienceRepository.findById(experienceId)
                 .orElseThrow(() ->{
                     leLogger.warn("Experience not found.");
-                    throw new ExperienceNotFoundException(ApiError.builder()
+                    throw new ResourceNotFoundException(ApiError.builder()
                             .path(getCurrentRequest())
                             .error("Experience not found.")
                             .status(HttpStatus.NOT_FOUND)
@@ -366,7 +439,7 @@ public class InterviewService {
         return organisationRepository.findById(organisationId)
                 .orElseThrow(() -> {
                    leLogger.warn("Organisation not found.");
-                   throw new OrganisationNotFoundException(ApiError.builder()
+                   throw new ResourceNotFoundException(ApiError.builder()
                            .path(getCurrentRequest())
                            .error("Organisation not found")
                            .status(HttpStatus.NOT_FOUND)
@@ -379,7 +452,7 @@ public class InterviewService {
         return educationRepository.findById(educationId)
                 .orElseThrow(() -> {
                     leLogger.warn("Education not found.");
-                    throw new EducationNotFoundException(ApiError.builder()
+                    throw new ResourceNotFoundException(ApiError.builder()
                             .path(getCurrentRequest())
                             .error("Education not found.")
                             .status(HttpStatus.NOT_FOUND)

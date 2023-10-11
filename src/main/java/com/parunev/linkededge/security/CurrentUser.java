@@ -1,6 +1,6 @@
 package com.parunev.linkededge.security;
 
-import com.parunev.linkededge.security.exceptions.UserNotFoundException;
+import com.parunev.linkededge.security.exceptions.ResourceNotFoundException;
 import com.parunev.linkededge.security.payload.ApiError;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -21,7 +21,7 @@ public class CurrentUser {
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             return (UserDetails) authentication.getPrincipal();
         }
-        throw new UserNotFoundException(ApiError
+        throw new ResourceNotFoundException(ApiError
                 .builder()
                 .error("No authentication presented")
                 .timestamp(LocalDateTime.now())

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.parunev.linkededge.model.User;
 import com.parunev.linkededge.repository.JwtTokenRepository;
 import com.parunev.linkededge.repository.UserRepository;
-import com.parunev.linkededge.security.exceptions.UserNotFoundException;
+import com.parunev.linkededge.security.exceptions.ResourceNotFoundException;
 import com.parunev.linkededge.security.payload.ApiError;
 import com.parunev.linkededge.service.UserService;
 import com.parunev.linkededge.util.LELogger;
@@ -93,7 +93,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 filterChain.doFilter(request, response);
             }
-        } catch (SignatureException | ExpiredJwtException | UserNotFoundException exception) {
+        } catch (SignatureException | ExpiredJwtException | ResourceNotFoundException exception) {
             leLogger.error("Authentication failed: {}", exception, exception.getMessage());
 
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -114,7 +114,7 @@ public class JwtFilter extends OncePerRequestFilter {
         return userRepository.findByEmail(email).orElseThrow(
                 () -> {
                     leLogger.warn("User with the provided email not found: {}", email);
-                    throw new UserNotFoundException(ApiError.builder()
+                    throw new ResourceNotFoundException(ApiError.builder()
                             .path(getCurrentRequest())
                             .error("User with the provided email not found. Please ensure you have created an account")
                             .timestamp(LocalDateTime.now())

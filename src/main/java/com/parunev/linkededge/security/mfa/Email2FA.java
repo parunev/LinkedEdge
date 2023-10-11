@@ -5,7 +5,7 @@ import com.parunev.linkededge.model.User;
 import com.parunev.linkededge.model.payload.login.VerificationRequest;
 import com.parunev.linkededge.repository.UserRepository;
 import com.parunev.linkededge.security.exceptions.OTPValidationException;
-import com.parunev.linkededge.security.exceptions.UserNotFoundException;
+import com.parunev.linkededge.security.exceptions.ResourceNotFoundException;
 import com.parunev.linkededge.security.payload.ApiError;
 import com.parunev.linkededge.util.LELogger;
 import com.parunev.linkededge.util.email.EmailSender;
@@ -59,7 +59,7 @@ public class Email2FA {
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow(
                 () -> {
                     leLogger.warn("User with the provided username not found: {}", request.getUsername());
-                    throw new UserNotFoundException(ApiError.builder()
+                    throw new ResourceNotFoundException(ApiError.builder()
                             .path(getCurrentRequest())
                             .error("User with the provided username not found. Please ensure you have entered the correct username.")
                             .timestamp(LocalDateTime.now())

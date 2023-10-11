@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.parunev.linkededge.util.ConfirmationTokenUtil.isValidToken;
 import static com.parunev.linkededge.util.RequestUtil.getCurrentRequest;
 import static com.parunev.linkededge.util.email.EmailPatterns.confirmationEmail;
 import static com.parunev.linkededge.util.email.EmailPatterns.forgotPasswordEmail;
@@ -106,7 +107,7 @@ public class AuthService {
         User user = findUserByEmail(request.getEmail());
 
         if (user.isEnabled()){
-            throw new UserAlreadyEnabledException(
+            throw new AuthServiceException(
                     buildError("Your account is already enabled." +
                             "You can log in now.", HttpStatus.BAD_REQUEST));
         }
@@ -141,7 +142,7 @@ public class AuthService {
         ConfirmationToken confirmationToken = confirmationTokenRepository.findByTokenValue(token)
                 .orElseThrow(() -> {
                     leLogger.warn("Token not found");
-                    throw new RegistrationFailedException(
+                    throw new AuthServiceException(
                             buildError("Token not found. Please ensure you have the correct token or request a new one.", HttpStatus.NOT_FOUND)
                             );
                 });
@@ -152,7 +153,7 @@ public class AuthService {
 
         if (confirmationToken.getUser().isEnabled()){
             leLogger.warn("User already enabled: {}", confirmationToken.getUser().getEmail());
-            throw new RegistrationFailedException(
+            throw new AuthServiceException(
                     buildError("The user associated with this token is already enabled", HttpStatus.BAD_REQUEST)
             );
         }
@@ -330,7 +331,7 @@ public class AuthService {
 
     private void isMfaEnabled(boolean enabled) {
         if (!enabled){
-            throw new UserMfaNotEnabledException(
+            throw new AuthServiceException(
                     buildError("Multi-factor authentication is not enabled for your account.", HttpStatus.BAD_REQUEST));
         }
     }
@@ -395,7 +396,7 @@ public class AuthService {
                 .orElseThrow(
                         () -> {
                             leLogger.warn("Token not found or is already used!");
-                            throw new InvalidPasswordResetException(
+                            throw new AuthServiceException(
                                     buildError("Token not found or is already used!", HttpStatus.NOT_FOUND));
                         });
     }
@@ -417,22 +418,6 @@ public class AuthService {
         jwtTokenRepository.saveAll(validTokens);
     }
 
-    private void isValidToken(ConfirmationToken confirmationToken) {
-        if (confirmationToken.getConfirmed() != null) {
-            leLogger.warn("Token already confirmed: {}", confirmationToken.getParameters());
-            throw new RegistrationFailedException(
-                    buildError("The provided token has already been confirmed", HttpStatus.BAD_REQUEST));
-        }
-
-        if (confirmationToken.getExpires().isBefore(LocalDateTime.now())) {
-            leLogger.warn("Token has expired: {}", confirmationToken.getParameters());
-            throw new RegistrationFailedException(
-                    buildError("The provided token has expired. Please request a new one", HttpStatus.BAD_REQUEST)
-            );
-        }
-    }
-
-
     private void userExists(String email, String username) {
         boolean emailExists = userRepository.existsByEmail(email);
         boolean usernameExists = userRepository.existsByUsername(username);
@@ -449,7 +434,7 @@ public class AuthService {
         }
 
         if(!message.equals("true")){
-            throw new RegistrationFailedException(buildError(message, HttpStatus.BAD_REQUEST));
+            throw new AuthServiceException(buildError(message, HttpStatus.BAD_REQUEST));
         }
     }
 
@@ -466,7 +451,7 @@ public class AuthService {
         return userRepository.findByEmail(email).orElseThrow(
                 () -> {
                     leLogger.warn("User with the provided email not found: {}", email);
-                    throw new UserNotFoundException(
+                    throw new ResourceNotFoundException(
                             buildError("User with the provided email not found. Please ensure you have created an account", HttpStatus.NOT_FOUND)
                     );
                 }
@@ -477,7 +462,7 @@ public class AuthService {
         return userRepository.findByUsername(username).orElseThrow(
                 () -> {
                     leLogger.warn("User with the provided username not found: {}",username);
-                    throw new UserNotFoundException(
+                    throw new ResourceNotFoundException(
                             buildError("User with the provided username not found. Please ensure you have entered the correct username", HttpStatus.NOT_FOUND)
                     );
                 }

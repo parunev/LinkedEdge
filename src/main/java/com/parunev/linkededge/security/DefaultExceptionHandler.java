@@ -74,11 +74,6 @@ public class DefaultExceptionHandler {
         return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());
     }
 
-    @ExceptionHandler(ProfileNotFoundException.class)
-    public ResponseEntity<ApiError> handleProfileNotFoundException(ProfileNotFoundException ex){
-        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
-    }
-
     @ExceptionHandler(InvalidExtractException.class)
     public ResponseEntity<ApiError> handleInvalidExtractException(InvalidExtractException ex){
         return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());
@@ -86,41 +81,6 @@ public class DefaultExceptionHandler {
 
     @ExceptionHandler(EmailSenderException.class)
     public ResponseEntity<ApiError> handleEmailSenderException(EmailSenderException ex) {
-        return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());
-    }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ApiError> handleUserNotFoundException(UserNotFoundException ex) {
-        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
-    }
-
-    @ExceptionHandler(QuestionNotFoundException.class)
-    public ResponseEntity<ApiError> handleQuestionNotFoundException(QuestionNotFoundException ex) {
-        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
-    }
-
-    @ExceptionHandler(EducationNotFoundException.class)
-    public ResponseEntity<ApiError> handleEducationNotFoundException(EducationNotFoundException ex) {
-        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
-    }
-
-    @ExceptionHandler(ExperienceNotFoundException.class)
-    public ResponseEntity<ApiError> handleExperienceNotFoundException(ExperienceNotFoundException ex) {
-        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
-    }
-
-    @ExceptionHandler(OrganisationNotFoundException.class)
-    public ResponseEntity<ApiError> handleOrganisationNotFoundException(OrganisationNotFoundException ex) {
-        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
-    }
-
-    @ExceptionHandler(SkillNotFoundException.class)
-    public ResponseEntity<ApiError> handleSkillNotFoundException(SkillNotFoundException ex) {
-        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
-    }
-
-    @ExceptionHandler(InsufficientCapacityException.class)
-    public ResponseEntity<ApiError> handleInsufficientCapacityException(InsufficientCapacityException ex) {
         return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());
     }
 
@@ -139,29 +99,19 @@ public class DefaultExceptionHandler {
         return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());
     }
 
-    @ExceptionHandler(UserAlreadyEnabledException.class)
-    public ResponseEntity<ApiError> handleUserAlreadyEnabledException(UserAlreadyEnabledException ex){
-        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
-    }
-
-    @ExceptionHandler(UserMfaNotEnabledException.class)
-    public ResponseEntity<ApiError> handleUserMfaNotEnabledException(UserMfaNotEnabledException ex){
-        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
-    }
-
-    @ExceptionHandler(RegistrationFailedException.class)
-    public ResponseEntity<ApiError> handleRegistrationFailedException(RegistrationFailedException ex) {
-        return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());
-    }
-
     @ExceptionHandler(OTPValidationException.class)
     public ResponseEntity<ApiError> handleOTPValidationException(OTPValidationException ex){
         return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());
     }
 
-    @ExceptionHandler(InvalidPasswordResetException.class)
-    public ResponseEntity<ApiError> handleInvalidPasswordResetException(InvalidPasswordResetException ex){
-        return new ResponseEntity<>(ex.getApiError(), ex.getApiError().getStatus());
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiError> handleResourceNotFoundException(ResourceNotFoundException ex){
+        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
+    }
+
+    @ExceptionHandler(AuthServiceException.class)
+    public ResponseEntity<ApiError> handleAuthServiceException(AuthServiceException ex){
+        return new ResponseEntity<>(ex.getError(), ex.getError().getStatus());
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

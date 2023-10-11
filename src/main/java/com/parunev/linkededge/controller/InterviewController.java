@@ -1,10 +1,6 @@
 package com.parunev.linkededge.controller;
 
-import com.parunev.linkededge.model.payload.interview.AnswerRequest;
-import com.parunev.linkededge.model.payload.interview.AnswerResponse;
-import com.parunev.linkededge.model.payload.interview.QuestionRequest;
-import com.parunev.linkededge.model.payload.interview.QuestionResponse;
-import com.parunev.linkededge.model.payload.profile.JobRequest;
+import com.parunev.linkededge.model.payload.interview.*;
 import com.parunev.linkededge.service.InterviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,7 +34,7 @@ public class InterviewController {
 
     @GetMapping("/prepare-me")
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_USER_EXTRA')")
-    public ResponseEntity<String> prepareMeForAJob(@RequestBody JobRequest request){
+    public ResponseEntity<JobResponse> prepareMeForAJob(@RequestBody JobRequest request){
         return new ResponseEntity<>(interviewService.prepareMeForAJob(request), HttpStatus.OK);
     }
 }

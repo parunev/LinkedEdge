@@ -2,7 +2,7 @@ package com.parunev.linkededge.security.jwt;
 
 import com.parunev.linkededge.model.User;
 import com.parunev.linkededge.repository.UserRepository;
-import com.parunev.linkededge.security.exceptions.UserNotFoundException;
+import com.parunev.linkededge.security.exceptions.ResourceNotFoundException;
 import com.parunev.linkededge.security.payload.ApiError;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -115,7 +115,7 @@ public class JwtService {
     private User findUserByUsername(String username){
         return userRepository.findByUsername(username).orElseThrow(
                 () -> {
-                    throw new UserNotFoundException(
+                    throw new ResourceNotFoundException(
                             ApiError.builder()
                                     .path(getCurrentRequest())
                                     .error("User with the provided username not found. Please ensure you have entered correct username")

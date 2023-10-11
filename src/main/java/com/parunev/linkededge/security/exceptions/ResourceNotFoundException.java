@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Getter
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class OrganisationNotFoundException extends RuntimeException{
+public class ResourceNotFoundException extends RuntimeException{
+
     private final transient ApiError error;
 
-    public OrganisationNotFoundException(ApiError message) {
+    public ResourceNotFoundException(ApiError message) {
         this.error = message;
     }
 }

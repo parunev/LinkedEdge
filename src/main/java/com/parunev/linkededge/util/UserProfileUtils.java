@@ -5,8 +5,7 @@ import com.parunev.linkededge.model.Profile;
 import com.parunev.linkededge.model.User;
 import com.parunev.linkededge.repository.ProfileRepository;
 import com.parunev.linkededge.repository.UserRepository;
-import com.parunev.linkededge.security.exceptions.ProfileNotFoundException;
-import com.parunev.linkededge.security.exceptions.UserNotFoundException;
+import com.parunev.linkededge.security.exceptions.ResourceNotFoundException;
 import com.parunev.linkededge.security.payload.ApiError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,7 +36,7 @@ public class UserProfileUtils {
         return userRepository.findByUsername(getCurrentUserDetails().getUsername())
                 .orElseThrow(() -> {
                     leLogger.warn("User not found.");
-                    throw new UserNotFoundException(ApiError.builder()
+                    throw new ResourceNotFoundException(ApiError.builder()
                             .path(getCurrentRequest())
                             .error("User not present in the database.")
                             .timestamp(LocalDateTime.now())
@@ -50,7 +49,7 @@ public class UserProfileUtils {
         return profileRepository.findByUserId(id)
                 .orElseThrow(() -> {
                     leLogger.warn("Profile not found");
-                    throw new ProfileNotFoundException(ApiError.builder()
+                    throw new ResourceNotFoundException(ApiError.builder()
                             .path(getCurrentRequest())
                             .error("Profile not present in the database")
                             .timestamp(LocalDateTime.now())
