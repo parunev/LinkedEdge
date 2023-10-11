@@ -102,6 +102,9 @@ public class InterviewService {
                     .build());
         }
 
+        pair.getRight().setCredits(pair.getRight().getJobCredits() - 1);
+        profileRepository.save(pair.getRight());
+
         return JobResponse.builder()
                 .coaching(interviewPreparation
                         .getLeft()
