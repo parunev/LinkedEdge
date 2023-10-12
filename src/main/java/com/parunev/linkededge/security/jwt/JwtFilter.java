@@ -30,20 +30,37 @@ import java.time.LocalDateTime;
 
 import static com.parunev.linkededge.util.RequestUtil.getCurrentRequest;
 
+/**
+ * @Description: This class represents a custom filter for handling JWT-based authentication in the LinkedEdge application.
+ * It is responsible for processing JWT tokens, authenticating users, and enforcing security measures.
+ * This filter is invoked on each incoming HTTP request to secure the application.
+ *
+ * @author Martin Parunev
+ * @date October 12, 2023
+ */
 
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
-    private final JwtService jwtService;
-    private final UserService userService;
-    private final JwtTokenRepository jwTokenRepository;
-    private final UserRepository userRepository;
-    private final ObjectMapper objectMapper;
-    private final LELogger leLogger = new LELogger(JwtFilter.class);
-    private static final String CORRELATION_ID = "correlationId";
-    private static final String[] HEADERS = {"Authorization", "Bearer "};
+    private final JwtService jwtService; // Service for JWT token operations
+    private final UserService userService; // Service for user-related operations
+    private final JwtTokenRepository jwTokenRepository; // Repository for JWT tokens
+    private final UserRepository userRepository; // Repository for user information
+    private final ObjectMapper objectMapper; // ObjectMapper for JSON serialization/deserialization
+    private final LELogger leLogger = new LELogger(JwtFilter.class); // Logger for monitoring filter activity
+    private static final String CORRELATION_ID = "correlationId"; // Mapped Diagnostic Context key for correlation ID
+    private static final String[] HEADERS = {"Authorization", "Bearer "}; // HTTP headers for JWT token extraction
 
-
+    /**
+     * Override of the `doFilterInternal` method from the `OncePerRequestFilter` class.
+     * It processes each incoming HTTP request to apply JWT-based authentication.
+     *
+     * @param request       The incoming HTTP request
+     * @param response      The HTTP response
+     * @param filterChain   The filter chain for additional processing
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -51,9 +68,11 @@ public class JwtFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         try {
+            // Set a unique correlation ID for this request
             MDC.put(CORRELATION_ID, LELogger.generateCorrelationId());
             LELogger.setLoggerProperties(MDC.get(CORRELATION_ID), request);
 
+            // Log the details of the incoming request
             leLogger.debug("Received request: {} {}",
                     request.getMethod(), request.getRequestURI());
 
@@ -62,24 +81,27 @@ public class JwtFilter extends OncePerRequestFilter {
             final String email;
 
             if (authHeader == null || !authHeader.startsWith(HEADERS[1])) {
+                // No JWT token found in the request. Proceed without authentication.
                 leLogger.debug("No JWT token found in the request. Proceeding without authentication.");
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            jwt = authHeader.substring(7);
-            email = jwtService.extractEmail(jwt);
+            jwt = authHeader.substring(7); // Extract JWT token from the authorization header
+            email = jwtService.extractEmail(jwt); // Extract email from the JWT token
 
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                // Retrieve user details based on the email
                 User user = findUserByEmail(email);
                 UserDetails userDetails = this.userService.loadUserByUsername(user.getUsername());
 
+                // Check if the JWT token is valid and not revoked
                 boolean isTokenValid = jwTokenRepository.findByTokenValue(jwt)
                         .map(jwToken -> !jwToken.isExpired() && !jwToken.isRevoked())
                         .orElse(false);
 
                 if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {
-
+                    // User authentication is successful
                     leLogger.info("User {} authenticated successfully.", userDetails.getUsername());
 
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
@@ -88,12 +110,15 @@ public class JwtFilter extends OncePerRequestFilter {
 
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
+                    // Set the user's authentication details in the security context
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
 
+                // Continue with the filter chain
                 filterChain.doFilter(request, response);
             }
         } catch (SignatureException | ExpiredJwtException | ResourceNotFoundException exception) {
+            // Handle authentication failures
             leLogger.error("Authentication failed: {}", exception, exception.getMessage());
 
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -105,11 +130,19 @@ public class JwtFilter extends OncePerRequestFilter {
                     .build()));
 
         } finally {
+            // Remove the correlation ID and clear logger properties
             MDC.remove(CORRELATION_ID);
             LELogger.clearLoggerProperties();
         }
     }
 
+    /**
+     * Find a user by email and throw a ResourceNotFoundException if not found.
+     *
+     * @param email The email address of the user
+     * @return The user with the given email
+     * @throws ResourceNotFoundException if the user is not found
+     */
     private User findUserByEmail(String email){
         return userRepository.findByEmail(email).orElseThrow(
                 () -> {
