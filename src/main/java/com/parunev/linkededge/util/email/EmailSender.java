@@ -16,6 +16,13 @@ import java.time.LocalDateTime;
 
 import static com.parunev.linkededge.util.RequestUtil.getCurrentRequest;
 
+/**
+ * The `EmailSender` class is responsible for sending emails asynchronously in the application. It utilizes the
+ * `JavaMailSender` provided by Spring Framework to handle email sending operations. This class offers a method
+ * for sending emails to recipients.
+ * @author Martin Parunev
+ * @date October 12, 2023
+ */
 @Component
 @RequiredArgsConstructor
 public class EmailSender {
@@ -23,6 +30,18 @@ public class EmailSender {
     private final JavaMailSender sender;
     private final LELogger leLogger = new LELogger(EmailSender.class);
 
+    /**
+     * Asynchronously sends an email to a specified recipient.
+     *
+     * @param to The recipient's email address.
+     * @param email The content of the email, including HTML content.
+     * @param subject The subject of the email.
+     * <p>
+     * This method is marked as asynchronous using Spring's `@Async` annotation, allowing email sending operations
+     * to be performed in the background. It creates a `MimeMessage` and uses a `MimeMessageHelper` to set email
+     * details such as the recipient, subject, and content.
+     * @throws EmailSenderException If the email sending process encounters an exception a corresponding error message and status are shown
+     */
     @Async
     public void send(String to, String email, String subject) {
         leLogger.info("Sending email to: " + to);

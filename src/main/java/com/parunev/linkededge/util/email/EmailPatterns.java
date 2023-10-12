@@ -2,7 +2,15 @@ package com.parunev.linkededge.util.email;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
+/**
+ * The `EmailPatterns` class provides predefined patterns for generating emails used in the application.
+ * It offers static methods for creating email content, such as confirmation emails.
+ * <p>
+ * These patterns serve as templates for constructing email messages and are typically used for sending
+ * notifications, confirmation emails, and other email-related functionalities in the application.
+ * @author Martin Parunev
+ * @date October 12, 2023
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EmailPatterns {
 
