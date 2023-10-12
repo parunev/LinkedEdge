@@ -9,13 +9,23 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * @Description: This class provides a set of system and user prompts for interacting with an AI assistant specialized
+ * in generating interview questions, answering specialized interview questions, and validating skills, education, and job experience.
+ * @author Martin Parunev
+ * @date October 12, 2023
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OpenAiPrompts {
 
+    // Constants for message roles
     private static final String ROLE_SYSTEM = "system";
     private static final String ROLE_USER = "user";
     private static final LELogger leLogger = new LELogger(OpenAiPrompts.class);
 
+    /**
+     * System message instructing the AI to generate interview questions for various skills.
+     */
     public static final OpenAiMessage SYSTEM_INTERVIEW_QUESTION_PROMPT =
             OpenAiMessage.builder()
             .role(ROLE_SYSTEM)
@@ -52,6 +62,9 @@ public class OpenAiPrompts {
             """)
             .build();
 
+    /**
+     * User message specifying criteria for generating interview questions.
+     */
     public static OpenAiMessage userInterviewQuestionsPrompt(String education, String experience, List<Skill> skills, QuestionDifficulty difficulty){
         StringBuilder content = new StringBuilder();
         content.append("Generate 5 open-ended interview questions for each skill with the following criteria:\n");
@@ -74,6 +87,9 @@ public class OpenAiPrompts {
                 .build();
     }
 
+    /**
+     * System message instructing the AI to generate a detailed answer to a specialized interview question.
+     */
     public static final OpenAiMessage SYSTEM_ANSWER_SPECIALIZED_INTERVIEW_QUESTION_PROMPT =
             OpenAiMessage.builder()
                     .role(ROLE_SYSTEM)
@@ -101,6 +117,9 @@ public class OpenAiPrompts {
         - The question may cover a challenging topic related to various skills.
         """).build();
 
+    /**
+     * User message for generating a specialized answer to an interview question.
+     */
     public static OpenAiMessage userGenerateSpecializedAnswer(String question) {
         return OpenAiMessage.builder()
                 .role(ROLE_USER)
@@ -109,6 +128,9 @@ public class OpenAiPrompts {
                 .build();
     }
 
+    /**
+     * System message instructing the AI to validate whether a skill is valid or not.
+     */
     public final static OpenAiMessage SYSTEM_IS_IT_VALID_SKILL =
         OpenAiMessage.builder()
                 .role(ROLE_SYSTEM)
@@ -118,6 +140,9 @@ public class OpenAiPrompts {
             """)
                 .build();
 
+    /**
+     * User message for validating a skill.
+     */
     public static OpenAiMessage userIsItValidSkill(String skillToCheck){
         return OpenAiMessage.builder()
                 .role(ROLE_USER)
@@ -125,6 +150,9 @@ public class OpenAiPrompts {
                 .build();
     }
 
+    /**
+     * System message instructing the AI to validate whether an education institution is valid or not.
+     */
     public final static OpenAiMessage SYSTEM_IS_IT_VALID_EDUCATION =
             OpenAiMessage.builder()
                     .role(ROLE_SYSTEM)
@@ -134,6 +162,9 @@ public class OpenAiPrompts {
             """)
                     .build();
 
+    /**
+     * User message for validating an education institution.
+     */
     public static OpenAiMessage userIsItValidEducation(String educationToCheck){
         return OpenAiMessage.builder()
                 .role(ROLE_USER)
@@ -141,6 +172,10 @@ public class OpenAiPrompts {
                 .build();
     }
 
+
+    /**
+     * System message instructing the AI to validate whether a job experience is valid or not.
+     */
     public final static OpenAiMessage SYSTEM_IS_IT_VALID_EXPERIENCE =
             OpenAiMessage.builder()
                     .role(ROLE_SYSTEM)
@@ -151,6 +186,9 @@ public class OpenAiPrompts {
                             """)
                     .build();
 
+    /**
+     * User message for validating a job experience.
+     */
     public static OpenAiMessage userIsItValidExperience(String experienceToCheck){
         return OpenAiMessage.builder()
                 .role(ROLE_USER)
