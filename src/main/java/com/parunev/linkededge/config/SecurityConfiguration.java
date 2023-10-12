@@ -70,6 +70,11 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/edge-api/v1/auth/**").permitAll() // Permits public access to specific endpoints.
                         .requestMatchers("/edge-api/v1/profile/**").permitAll()
+                        .requestMatchers("/v2/api-docs", "/v3/api-docs",
+                                "/v3/api-docs/**", "/swagger-resources",
+                                "/swagger-resources/**", "/configuration/ui",
+                                "/configuration/security", "/swagger-ui/**",
+                                "/webjars/**", "swagger-ui.html").permitAll()
                         .anyRequest().authenticated()) // Requires authentication for any other requests.
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // Integrates JWT authentication.

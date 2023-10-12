@@ -73,8 +73,10 @@ public class JwtFilter extends OncePerRequestFilter {
             LELogger.setLoggerProperties(MDC.get(CORRELATION_ID), request);
 
             // Log the details of the incoming request
-            leLogger.debug("Received request: {} {}",
-                    request.getMethod(), request.getRequestURI());
+            if(request.getRequestURI().contains("/edge-api/")){ // DISABLING THE SWAGGER LOGGING LEVELS
+                leLogger.debug("Received request: {} {}",
+                        request.getMethod(), request.getRequestURI());
+            }
 
             final String authHeader = request.getHeader(HEADERS[0]);
             final String jwt;
@@ -82,7 +84,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
             if (authHeader == null || !authHeader.startsWith(HEADERS[1])) {
                 // No JWT token found in the request. Proceed without authentication.
-                leLogger.debug("No JWT token found in the request. Proceeding without authentication.");
+                if(request.getRequestURI().contains("/edge-api/")){ // DISABLING THE SWAGGER LOGGING LEVELS
+                    leLogger.debug("No JWT token found in the request. Proceeding without authentication.");
+                }
+
                 filterChain.doFilter(request, response);
                 return;
             }
