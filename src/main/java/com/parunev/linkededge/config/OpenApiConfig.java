@@ -10,6 +10,17 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 
+/**
+ * @Description: Configuration class for OpenAPI documentation.
+ * @OpenAPIDefinition: This annotation defines the global configuration for OpenAPI documentation for your application.
+ * @Info: Provides high-level information about your API.
+ * @Server: Describes a server where the API is hosted.
+ * @SecurityRequirement Specifies that the API requires the "bearerAuth" security scheme for access.
+ * @SecurityScheme Defines the "bearerAuth" security scheme, which is based on JWT (JSON Web Token) authentication.
+ *
+ * @author Martin Parunev
+ * @date October 12, 2023
+ */
 @OpenAPIDefinition(
         info = @Info(
         contact = @Contact(
