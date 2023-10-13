@@ -163,7 +163,7 @@ If you have any questions, encounter issues, or need further assistance, please 
 
 You can contact me through the following channels:
  - Email: Reach me via email at [Gmail](mailto:parunev@gmail.com?subject=[LinkedEdge]%20Source%20GitHub)
- - LinkedIn: Feel free to connect with [LinkedIn](www.linkedin.com/in/martin-parunev-49006425b) for professional networking or inquiries.
+ - LinkedIn: Feel free to connect with www.linkedin.com/in/martin-parunev-49006425b for professional networking or inquiries.
 
  I value your experience with LinkedEdge and I'm always open to addressing your queries and concerns. Your satisfaction is my priority, and I'm here to support you in any way I can.
 
