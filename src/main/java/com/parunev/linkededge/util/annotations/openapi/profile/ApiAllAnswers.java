@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@Operation(summary = "Get All User Answers", description = "GET endpoint to retrieve a list of answers with optional filtering related to the user. The user needs to be logged in order to do this.")
+@Operation(summary = "Get all user answers", description = "GET endpoint to retrieve a list of answers with optional filtering related to the user. The user needs to be logged in order to do this.")
 @ApiResponse(
         responseCode = "200",
         description = "Questions retrieved successfully.",

@@ -17,6 +17,7 @@ import com.parunev.linkededge.util.LELogger;
 import com.parunev.linkededge.util.annotations.openapi.profile.*;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +32,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/edge-api/v1/profile")
+@Tag(name = "Profile Controller", description = "API endpoints for managing user profiles and related actions.")
 public class ProfileController {
 
     private final UserProfileService userProfileService;

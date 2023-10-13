@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Operation(
-        summary = "Get Question by ID",
+        summary = "Get question by id",
         description = "GET endpoint to retrieve a question by its unique identifier."
 )
 @ApiResponse(
