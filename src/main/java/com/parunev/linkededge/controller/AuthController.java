@@ -8,6 +8,7 @@ import com.parunev.linkededge.service.AuthService;
 import com.parunev.linkededge.util.LELogger;
 import com.parunev.linkededge.util.annotations.openapi.auth.*;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class AuthController {
     @ApiConfirmRegistration
     @GetMapping("/register/confirm")
     public ResponseEntity<RegistrationResponse> confirmRegister(
-            @Parameter(name = "Email confirmation token") @RequestParam("token") String token){
+            @Parameter(in = ParameterIn.QUERY, name = "token", description = "Email confirmation token") @RequestParam("token") String token){
         leLogger.info("Email confirmation request received");
         return new ResponseEntity<>(authService.confirmToken(token), HttpStatus.OK);
     }
@@ -89,7 +90,7 @@ public class AuthController {
     @ApiResetPassword
     @PostMapping("/login/reset-password")
     public ResponseEntity<ForgotPasswordResponse> resetPassword(
-            @Parameter(name = "Password confirmation token")@RequestParam("token") String token,
+            @Parameter(in = ParameterIn.QUERY, name = "token", description = "Password confirmation token")@RequestParam("token") String token,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(required = true, description = "Request payload for resetting the user's password.")
             @RequestBody ResetPasswordRequest request) {
         leLogger.info("Reset password request received");
