@@ -18,10 +18,12 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OpenAiJobPrompt {
 
+    // Constants for message roles
     private static final String ROLE_SYSTEM = "system";
     private static final String ROLE_USER = "user";
     private static final LELogger leLogger = new LELogger(OpenAiPrompts.class);
 
+    // Generates a system message that sets the context for interview preparation.
     public final static OpenAiMessage SYSTEM_PREPARE_AND_COACH_FOR_INTERVIEW = OpenAiMessage.builder()
             .role(ROLE_SYSTEM)
             .content("""
@@ -75,6 +77,7 @@ public class OpenAiJobPrompt {
                     """)
             .build();
 
+    // Generates a user message with dynamic content about a job-seeker's profile.
     public static OpenAiMessage userPrepareAndCoachForInterview(String companyName, Integer companyStaff,
                                                                 List<CompanySpecialty> companySpecialties, List<CompanyResolution> companyResolutions,
                                                                 String jobDescription, String employmentStatus,

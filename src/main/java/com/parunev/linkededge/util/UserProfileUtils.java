@@ -17,6 +17,11 @@ import java.util.UUID;
 import static com.parunev.linkededge.security.CurrentUser.getCurrentUserDetails;
 import static com.parunev.linkededge.util.RequestUtil.getCurrentRequest;
 
+/**
+ * Utility class for managing user profiles and related operations.
+ * @author Martin Parunev
+ * @date October 12, 2023
+ */
 @Component
 @RequiredArgsConstructor
 public class UserProfileUtils {
@@ -25,6 +30,11 @@ public class UserProfileUtils {
     private final ProfileRepository profileRepository;
     private final LELogger leLogger = new LELogger(UserProfileUtils.class);
 
+    /**
+     * Retrieves the user and associated profile for the currently authenticated user.
+     *
+     * @return A {@link Pair} containing the user and profile.
+     */
     public Pair<User, Profile> getUserAndProfile(){
         User user = findUserByContextHolder();
         Profile profile = findProfileByUserId(user.getId());
@@ -32,6 +42,12 @@ public class UserProfileUtils {
         return Pair.of(user, profile);
     }
 
+    /**
+     * Retrieves the user based on the current user context.
+     *
+     * @return The user associated with the current authentication context.
+     * @throws ResourceNotFoundException if the user is not found.
+     */
     public User findUserByContextHolder() {
         return userRepository.findByUsername(getCurrentUserDetails().getUsername())
                 .orElseThrow(() -> {
@@ -45,6 +61,13 @@ public class UserProfileUtils {
                 });
     }
 
+    /**
+     * Retrieves the profile for a given user ID.
+     *
+     * @param id The user ID for which to retrieve the profile.
+     * @return The user's profile.
+     * @throws ResourceNotFoundException if the profile is not found.
+     */
     private Profile findProfileByUserId(UUID id) {
         return profileRepository.findByUserId(id)
                 .orElseThrow(() -> {
