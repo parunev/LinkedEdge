@@ -125,6 +125,20 @@ I've gone the extra mile to ensure that all the information you need is at your 
 ```
 ![LinkedEdge Documentation](https://i.postimg.cc/mrdm7yjP/temp-Imagety1-EFu.jpg)
 
+## Email Patterns
+
+Confirm your email:
+![LinkedEdge Confirm your email pattern](https://i.postimg.cc/GtTTW8Mq/temp-Imageezhn-Wp.jpg)
+
+Reset password:
+![LinkedEdge Reset your password pattern](https://i.postimg.cc/TYXnzQ6b/temp-Image2z-TGY1.jpg)
+
+Change email:
+![LinkedEdge Change your email pattern](https://i.postimg.cc/KzMgV3pQ/temp-Image-Oc-DGzu.jpg)
+
+Change password:
+![LinkedEdge Change your password pattern](https://i.postimg.cc/kGCDp1bX/temp-Imageu-B2x-BI.jpg)
+
 
 ## Logging Levels
 
